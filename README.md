@@ -6,12 +6,13 @@ This repository starts with the initial project structure and the required speci
 
 ## Current status
 
-This is the initial repository scaffold for the first phase of the product lifecycle. It establishes:
+This repository contains the baseline scaffold and the Phase 1 shell for the product lifecycle. It establishes:
 
 - a Python + FastAPI application shell
 - a rules directory that keeps policy values in YAML
 - a testing baseline
 - traceability and open-question tracking files
+- the Phase 1 service contracts for auth, sync, hash cache, scheduler, and quota enforcement
 
 ## Repository structure
 
@@ -27,10 +28,18 @@ This is the initial repository scaffold for the first phase of the product lifec
 ├── src/
 │   └── alpha_engine/
 │       ├── __init__.py
+│       ├── __init__.py
 │       ├── __main__.py
-│       └── app.py
+│       ├── app.py
+│       ├── auth.py
+│       ├── hash_cache.py
+│       ├── phase1.py
+│       ├── quota.py
+│       ├── scheduler.py
+│       └── sync.py
 ├── tests/
 │   └── test_app.py
+│   └── test_phase1_core.py
 └── docs/
     └── architecture.md
 ```
@@ -58,6 +67,18 @@ The app exposes a health endpoint at:
 ```text
 http://127.0.0.1:8080/health
 ```
+
+## Phase 1 service shell
+
+The project now includes a minimal Phase 1 implementation shell for:
+
+- auth state and session handling
+- sync status and metadata tracking
+- hash cache behavior and duplicate detection
+- scheduler slots and task naming
+- quota reserve and source-budget accounting
+
+These are intentionally minimal service contracts and should be expanded as requirements are implemented.
 
 ## Notes
 

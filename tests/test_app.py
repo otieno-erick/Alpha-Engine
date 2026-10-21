@@ -20,3 +20,12 @@ def test_root_endpoint():
     payload = response.json()
     assert payload["service"] == "alpha-engine"
     assert payload["status"] == "ready"
+
+
+def test_phase1_status_endpoint():
+    client = TestClient(app)
+    response = client.get("/phase1/status")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["scheduler"]["max_slots"] == 10
+    assert payload["quota"]["reserve"] == 5

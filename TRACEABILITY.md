@@ -1,6 +1,6 @@
 | Requirement ID | Module / file(s) | Test name | Status (todo / in progress / passing) | Last updated |
 |---|---|---|---|---|
-| G-01 | `README.md`, `pyproject.toml`, `src/alpha_engine/` | `test_app.py` smoke test | in progress | 2026-10-21 |
+| G-01 | `README.md`, `pyproject.toml`, `src/alpha_engine/` | `test_app.py` smoke test | passing | 2026-10-21 |
 | G-02 | `src/alpha_engine/` | app lifecycle smoke test | todo | 2026-10-21 |
 | G-03 | `rules/engine_rules.yaml` | YAML rule load test | passing | 2026-10-21 |
 | G-04 | `src/alpha_engine/app.py` | confirm-before-submit contract | todo | 2026-10-21 |
@@ -10,32 +10,32 @@
 | G-08 | `src/alpha_engine/` | alpha ID visibility test | todo | 2026-10-21 |
 | G-09 | `src/alpha_engine/` | stop-all smoke test | todo | 2026-10-21 |
 | G-10 | `src/alpha_engine/` | audit log test | todo | 2026-10-21 |
-| A-01 | `src/alpha_engine/` | auth fallback mock | todo | 2026-10-21 |
-| A-02 | `src/alpha_engine/` | session expiry recovery | todo | 2026-10-21 |
-| A-03 | `src/alpha_engine/` | recordset parsing test | todo | 2026-10-21 |
-| A-04 | `src/alpha_engine/` | quota header storage test | todo | 2026-10-21 |
-| A-05 | `src/alpha_engine/` | batching logic test | todo | 2026-10-21 |
-| A-06 | `src/alpha_engine/` | region-agnostic fix test | todo | 2026-10-21 |
-| A-07 | `src/alpha_engine/` | header display test | todo | 2026-10-21 |
-| S-01 | `src/alpha_engine/` | sync parity test | todo | 2026-10-21 |
-| S-02 | `src/alpha_engine/` | field metadata sync test | todo | 2026-10-21 |
-| S-03 | `src/alpha_engine/` | incremental sync resume test | todo | 2026-10-21 |
-| S-04 | `src/alpha_engine/` | cold-start cache load test | todo | 2026-10-21 |
-| H-01 | `src/alpha_engine/` | hash coverage test | todo | 2026-10-21 |
-| H-02 | `src/alpha_engine/` | duplicate cache hit test | todo | 2026-10-21 |
-| H-03 | `rules/` | pruning policy test | todo | 2026-10-21 |
-| H-04 | `src/alpha_engine/` | batched child dedupe test | todo | 2026-10-21 |
-| T-01 | `src/alpha_engine/` | scheduler slot test | todo | 2026-10-21 |
-| T-02 | `src/alpha_engine/` | task tagging test | todo | 2026-10-21 |
-| T-03 | `src/alpha_engine/` | per-task allocation test | todo | 2026-10-21 |
-| T-04 | `src/alpha_engine/` | tasks UI status test | todo | 2026-10-21 |
-| T-05 | `src/alpha_engine/` | per-source quota budget test | todo | 2026-10-21 |
-| T-06 | `src/alpha_engine/` | restart resilience test | todo | 2026-10-21 |
-| Q-01 | `src/alpha_engine/` | reserve check test | todo | 2026-10-21 |
-| Q-02 | `src/alpha_engine/` | quota ledger test | todo | 2026-10-21 |
-| R-01 | `rules/` | rules lookup test | todo | 2026-10-21 |
-| R-02 | `rules/` | neutralization matrix load test | todo | 2026-10-21 |
-| R-03 | `rules/` | stale rule validation test | todo | 2026-10-21 |
+| A-01 | `src/alpha_engine/auth.py` | auth fallback mock | todo | 2026-10-21 |
+| A-02 | `src/alpha_engine/auth.py` | session expiry recovery | todo | 2026-10-21 |
+| A-03 | `src/alpha_engine/sync.py` | recordset parsing test | todo | 2026-10-21 |
+| A-04 | `src/alpha_engine/quota.py` | quota header storage test | todo | 2026-10-21 |
+| A-05 | `src/alpha_engine/scheduler.py` | batching logic test | todo | 2026-10-21 |
+| A-06 | `src/alpha_engine/sync.py` | region-agnostic fix test | todo | 2026-10-21 |
+| A-07 | `src/alpha_engine/app.py` | header display test | todo | 2026-10-21 |
+| S-01 | `src/alpha_engine/sync.py` | sync parity test | todo | 2026-10-21 |
+| S-02 | `src/alpha_engine/sync.py` | field metadata sync test | todo | 2026-10-21 |
+| S-03 | `src/alpha_engine/sync.py` | incremental sync resume test | todo | 2026-10-21 |
+| S-04 | `src/alpha_engine/phase1.py` | cold-start cache load test | todo | 2026-10-21 |
+| H-01 | `src/alpha_engine/hash_cache.py` | hash coverage test | todo | 2026-10-21 |
+| H-02 | `src/alpha_engine/hash_cache.py` | duplicate cache hit test | todo | 2026-10-21 |
+| H-03 | `rules/engine_rules.yaml` | pruning policy test | todo | 2026-10-21 |
+| H-04 | `src/alpha_engine/hash_cache.py` | batched child dedupe test | todo | 2026-10-21 |
+| T-01 | `src/alpha_engine/scheduler.py` | scheduler slot test | todo | 2026-10-21 |
+| T-02 | `src/alpha_engine/scheduler.py` | task tagging test | todo | 2026-10-21 |
+| T-03 | `src/alpha_engine/scheduler.py` | per-task allocation test | todo | 2026-10-21 |
+| T-04 | `src/alpha_engine/app.py` | tasks UI status test | todo | 2026-10-21 |
+| T-05 | `src/alpha_engine/quota.py` | per-source quota budget test | todo | 2026-10-21 |
+| T-06 | `src/alpha_engine/scheduler.py` | restart resilience test | todo | 2026-10-21 |
+| Q-01 | `src/alpha_engine/quota.py` | reserve check test | todo | 2026-10-21 |
+| Q-02 | `src/alpha_engine/quota.py` | quota ledger test | todo | 2026-10-21 |
+| R-01 | `rules/engine_rules.yaml` | rules lookup test | todo | 2026-10-21 |
+| R-02 | `rules/engine_rules.yaml` | neutralization matrix load test | todo | 2026-10-21 |
+| R-03 | `rules/engine_rules.yaml` | stale rule validation test | todo | 2026-10-21 |
 | R-04 | `OPEN_QUESTIONS.md` | release conflict check | todo | 2026-10-21 |
 | V-01 | `src/alpha_engine/` | Fast Expression syntax test | todo | 2026-10-21 |
 | V-02 | `src/alpha_engine/` | vec operator validation test | todo | 2026-10-21 |
@@ -49,7 +49,7 @@
 | C-04 | `src/alpha_engine/` | IS Ladder test | todo | 2026-10-21 |
 | C-05 | `src/alpha_engine/` | fitness formula test | todo | 2026-10-21 |
 | C-06 | `src/alpha_engine/` | weight mode test | todo | 2026-10-21 |
-| C-07 | `rules/` | regional extras test | todo | 2026-10-21 |
+| C-07 | `rules/engine_rules.yaml` | regional extras test | todo | 2026-10-21 |
 | C-08 | `src/alpha_engine/` | clean alpha test | todo | 2026-10-21 |
 | D-01 | `src/alpha_engine/` | first failure action test | todo | 2026-10-21 |
 | D-02 | `src/alpha_engine/` | repair mapping test | todo | 2026-10-21 |

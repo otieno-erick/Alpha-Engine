@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import yaml
 
+from alpha_engine.phase1 import DEFAULT_PHASE1_STATE
+
 app = FastAPI(title="Alpha Engine", version="0.1.0")
 
 
@@ -31,3 +33,8 @@ def health() -> dict:
 @app.get("/rules")
 def read_rules() -> JSONResponse:
     return JSONResponse(content=_load_rules())
+
+
+@app.get("/phase1/status")
+def phase1_status() -> dict:
+    return DEFAULT_PHASE1_STATE.status()
