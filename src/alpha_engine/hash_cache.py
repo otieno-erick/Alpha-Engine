@@ -22,7 +22,8 @@ class HashCache:
 
     def set(self, config: Dict[str, Any], value: str) -> str:
         key = self.compute_hash(config)
-        self.entries[key] = value
+        if key not in self.entries:
+            self.entries[key] = value
         return key
 
     def has_duplicate(self, config: Dict[str, Any]) -> bool:

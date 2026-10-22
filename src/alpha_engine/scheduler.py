@@ -35,7 +35,7 @@ class TaskScheduler:
         return len(self.active_tasks)
 
     def has_capacity(self) -> bool:
-        return self.task_count() < self.max_slots
+        return self.task_count() <= self.max_slots
 
     def stop_task(self, task_name: str) -> str:
         self.active_tasks = [task for task in self.active_tasks if task.name != task_name]
