@@ -1,22 +1,22 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Dict
 
-from alpha_engine.auth import AuthService, DEFAULT_AUTH_SERVICE
-from alpha_engine.hash_cache import HashCache, DEFAULT_HASH_CACHE
-from alpha_engine.quota import QuotaLedger, DEFAULT_QUOTA_LEDGER
-from alpha_engine.scheduler import Task, TaskScheduler, DEFAULT_TASK_SCHEDULER
-from alpha_engine.sync import SyncService, DEFAULT_SYNC_SERVICE
+from alpha_engine.auth import AuthService
+from alpha_engine.hash_cache import HashCache
+from alpha_engine.quota import QuotaLedger
+from alpha_engine.scheduler import TaskScheduler
+from alpha_engine.sync import SyncService
 
 
 @dataclass
 class Phase1State:
-    auth_service: AuthService = DEFAULT_AUTH_SERVICE
-    sync_service: SyncService = DEFAULT_SYNC_SERVICE
-    hash_cache: HashCache = DEFAULT_HASH_CACHE
-    scheduler: TaskScheduler = DEFAULT_TASK_SCHEDULER
-    quota: QuotaLedger = DEFAULT_QUOTA_LEDGER
+    auth_service: AuthService = field(default_factory=AuthService)
+    sync_service: SyncService = field(default_factory=SyncService)
+    hash_cache: HashCache = field(default_factory=HashCache)
+    scheduler: TaskScheduler = field(default_factory=TaskScheduler)
+    quota: QuotaLedger = field(default_factory=QuotaLedger)
 
     def status(self) -> Dict[str, Any]:
         return {
