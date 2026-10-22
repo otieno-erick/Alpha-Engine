@@ -1,9 +1,8 @@
 from __future__ import annotations
 
+import yaml
 from pathlib import Path
 from typing import Any
-
-import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 RULES_DIR = ROOT / "rules"
@@ -16,6 +15,8 @@ def load_rules() -> dict[str, dict[str, Any]]:
 
     for path in sorted(RULES_DIR.glob("*.yaml")):
         payload = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+        if isinstance(payload, dict):
+            payload = [payload]
         if not isinstance(payload, list):
             continue
 

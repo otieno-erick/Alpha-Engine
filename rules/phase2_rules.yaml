@@ -1,0 +1,42 @@
+- id: rules.consultant_d1_sharpe
+  value: 1.58
+  source: "resolved policy value from product specification"
+  last_verified: ""
+- id: rules.max_weight_fail_pct
+  value: 10.0
+  source: "resolved policy value from product specification"
+  last_verified: ""
+- id: rules.max_weight_warn_pct
+  value: 8.0
+  source: "resolved policy value from product specification"
+  last_verified: ""
+- id: sub_universe_cutoff
+  value: 1.18
+  source: "Phase 2 scorer baseline"
+  last_verified: ""
+- id: is_ladder_discount
+  value: 0.85
+  source: "Phase 2 scorer baseline"
+  last_verified: ""
+- id: is_ladder_cutoff
+  value: 1.59
+  source: "Phase 2 scorer baseline"
+  last_verified: ""
+- id: powerpool.max_operators
+  value: 8
+  source: "Phase 2 validator baseline"
+  last_verified: ""
+- id: powerpool.max_unique_fields
+  value: 3
+  source: "Phase 2 validator baseline"
+  last_verified: ""
+- id: validator.allowed_windows
+  value:
+    - 5
+    - 10
+    - 21
+    - 63
+    - 121
+    - 252
+  source: "Phase 2 validator baseline"
+  last_verified: ""
