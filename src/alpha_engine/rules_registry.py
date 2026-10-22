@@ -7,12 +7,9 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
-<<<<<<< Updated upstream
 
-RULES_PATH = Path(__file__).resolve().parents[2] / "rules" / "phase2_rules.yaml"
-=======
 RULES_PATH = Path(__file__).resolve().parents[1] / "rules" / "phase2_rules.yaml"
->>>>>>> Stashed changes
+ Stashed changes
 
 
 @dataclass
@@ -86,3 +83,4 @@ class RulesRegistry:
 
 
 DEFAULT_RULES_REGISTRY = RulesRegistry()
+

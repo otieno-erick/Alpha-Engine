@@ -1,4 +1,4 @@
-from alpha_engine.rules_registry import RulesRegistry
+﻿from alpha_engine.rules_registry import RulesRegistry
 from alpha_engine.validator import Validator
 from alpha_engine.scorer import Scorer
 from alpha_engine.diagnoser import Diagnoser
@@ -33,3 +33,4 @@ def test_diagnoser_maps_first_failure():
     result = diagnoser.diagnose(checks)
     assert result["first_failure"] == "correlation"
     assert "dataset" in result["action"].lower() or "region" in result["action"].lower()
+

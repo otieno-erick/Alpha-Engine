@@ -1,4 +1,4 @@
-from alpha_engine.hash_cache import HashCache
+﻿from alpha_engine.hash_cache import HashCache
 from alpha_engine.quota import QuotaLedger
 from alpha_engine.scheduler import Task, TaskScheduler
 
@@ -28,3 +28,4 @@ def test_scheduler_slots_are_capped():
     scheduler.register_task(Task(name="task-3", source="ATOM"))
     assert scheduler.task_count() == 3
     assert scheduler.has_capacity() is False
+

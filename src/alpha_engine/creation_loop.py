@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -79,3 +79,4 @@ class StopAllController:
 DEFAULT_AUDIT_LOG = AuditLog()
 DEFAULT_SECRET_VAULT = SecretVault()
 DEFAULT_STOP_ALL = StopAllController()
+

@@ -1,8 +1,6 @@
-<<<<<<< Updated upstream
-from fastapi.testclient import TestClient
-=======
-﻿from fastapi.testclient import TestClient
->>>>>>> Stashed changes
+﻿
+ï»¿from fastapi.testclient import TestClient
+ Stashed changes
 
 from alpha_engine.app import app
 
@@ -33,3 +31,4 @@ def test_phase1_status_endpoint():
     payload = response.json()
     assert payload["scheduler"]["max_slots"] == 10
     assert payload["quota"]["reserve"] == 5
+

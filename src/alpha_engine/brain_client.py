@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional
@@ -37,3 +37,4 @@ class BrainEndpointCatalog:
 
 
 DEFAULT_BRAIN_ENDPOINTS = BrainEndpointCatalog()
+

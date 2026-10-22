@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
@@ -37,7 +37,7 @@ class CreationLoop:
             items.append(
                 Hypothesis(
                     dataset=dataset,
-                    rationale=f"Economic signal in {dataset} and align with the user’s factor exposure.",
+                    rationale=f"Economic signal in {dataset} and align with the userâ€™s factor exposure.",
                     expression=f"alpha_{dataset.lower()}_signal",
                     prompt_version=prompt_version,
                 )
@@ -74,3 +74,4 @@ class CreationLoop:
 
 
 DEFAULT_CREATION_LOOP = CreationLoop()
+

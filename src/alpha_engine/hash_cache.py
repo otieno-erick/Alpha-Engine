@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass, field
 from hashlib import sha256
@@ -35,3 +35,4 @@ class HashCache:
 
 
 DEFAULT_HASH_CACHE = HashCache()
+

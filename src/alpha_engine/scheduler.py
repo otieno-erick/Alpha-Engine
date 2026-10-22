@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
@@ -51,3 +51,4 @@ class TaskScheduler:
 
 
 DEFAULT_TASK_SCHEDULER = TaskScheduler()
+

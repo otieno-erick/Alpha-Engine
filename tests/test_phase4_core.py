@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional
@@ -123,3 +123,4 @@ class SubmissionPlanner:
 
 
 DEFAULT_SUBMISSION_PLANNER = SubmissionPlanner()
+
