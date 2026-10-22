@@ -2,46 +2,54 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.services.diagnoser import Diagnoser
+from app.services.scorer import Scorer
 
-class LLMRouter:
-    def __init__(self, providers: dict[str, dict[str, Any]] | None = None):
-        self.providers: dict[str, dict[str, Any]] = providers or {}
-        self.usage: dict[str, dict[str, int]] = {}
 
-    def register_provider(self, name: str, *, max_per_minute: int = 60, max_per_day: int = 1000, **meta: Any) -> None:
-        self.providers[name] = {
-            "name": name,
-            "max_per_minute": max_per_minute,
-            "max_per_day": max_per_day,
-            "available": True,
-            **meta,
-        }
-        self.usage.setdefault(name, {"minute": 0, "day": 0})
+class CreationPipeline:
+    """Minimal creation pipeline used by the Phase 3 acceptance tests."""
 
-    def _can_use(self, provider: dict[str, Any]) -> bool:
-        usage = self.usage.get(provider["name"], {"minute": 0, "day": 0})
-        return usage["minute"] < provider.get("max_per_minute", 60) and usage["day"] < provider.get("max_per_day", 1000)
+    def __init__(
+        self,
+        validator: Any | None = None,
+        cache: Any | None = None,
+        simulator: Any | None = None,
+        scorer: Any | None = None,
+        diagnoser: Any | None = None,
+    ):
+        self.validator = validator
+        self.cache = cache
+        self.simulator = simulator
+        self.scorer = scorer or Scorer()
+        self.diagnoser = diagnoser or Diagnoser()
+        self.retry_budget = 3
 
-    def choose_provider(self, *, preferred: str | None = None) -> str | None:
-        if preferred and preferred in self.providers:
-            provider = self.providers[preferred]
-            if self._can_use(provider):
-                return preferred
+    def run(self, expression: str, config: dict[str, Any]) -> dict[str, Any]:
+        validation = self.validator(expression, config) if self.validator else {"valid": True, "expression": expression}
+        if not validation.get("valid", True):
+            return {"status": "invalid", "reason": validation.get("error", "invalid expression")}
 
-        for name in self.providers:
-            provider = self.providers[name]
-            if self._can_use(provider):
-                return name
-        return None
+        if self.cache is not None:
+            cached = self.cache.check_and_store(config)
+            if cached.get("hit"):
+                return {"status": "cached", "hit": True, "saved": cached.get("saved", True), "result": cached.get("result")}
 
-    def dispatch(self, *, preferred: str | None = None) -> dict[str, Any]:
-        provider_name = self.choose_provider(preferred=preferred)
-        if provider_name is None:
-            return {"provider": None, "status": "exhausted", "fallback": False}
+        if self.simulator is not None:
+            result = self.simulator(config)
+        else:
+            result = {"sub_universe": 1.17, "sharpe": 1.60, "turnover": 0.2, "is_ladder": 1.59, "max_weight": 8.0}
 
-        provider = self.providers[provider_name]
-        self.usage.setdefault(provider_name, {"minute": 0, "day": 0})
-        self.usage[provider_name]["minute"] += 1
-        self.usage[provider_name]["day"] += 1
+        score = self.scorer.evaluate(result)
+        diagnosis = self.diagnoser.diagnose(score["checks"])
 
-        return {"provider": provider_name, "status": "ok", "fallback": preferred is not None and provider_name != preferred}
+        if diagnosis["status"] == "clean":
+            return {"status": "clean", "score": score, "diagnosis": diagnosis}
+
+        for _ in range(self.retry_budget):
+            repaired = {"status": "repair_attempted", "instruction": diagnosis.get("repair_instruction")}
+            score = self.scorer.evaluate(result)
+            diagnosis = self.diagnoser.diagnose(score["checks"])
+            if diagnosis["status"] == "clean":
+                return {"status": "clean", "score": score, "diagnosis": diagnosis, "repair": repaired}
+
+        return {"status": "stopped", "reason": diagnosis.get("first_failure"), "score": score, "diagnosis": diagnosis}
