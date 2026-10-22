@@ -1,42 +1,28 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any, Dict
+import hashlib
+import json
+from typing import Any, Dict, Optional
 
 
-@dataclass
-class QuotaLedger:
-    reserve: int = 5
-    remaining_quota: int = 100
-    used_today: int = 0
-    by_source: Dict[str, int] = field(default_factory=lambda: {
-        "LLM": 0,
-        "Evolution": 0,
-        "PowerPool": 0,
-        "ATOM": 0,
-        "Template": 0,
-        "Sampler": 0,
-        "CorrBreaker": 0,
-    })
+class HashCache:
+    def __init__(self):
+        self.entries: Dict[str, str] = {}
 
-    def can_spend(self, requested: int = 1) -> bool:
-        return (self.remaining_quota - requested) >= self.reserve
+    def _key(self, config: Dict[str, Any]) -> str:
+        return hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()
 
-    def spend(self, source: str, requested: int = 1) -> bool:
-        if not self.can_spend(requested):
-            return False
-        self.used_today += requested
-        self.remaining_quota -= requested
-        self.by_source[source] = self.by_source.get(source, 0) + requested
-        return True
+    def set(self, config: Dict[str, Any], value: str) -> str:
+        key = self._key(config)
+        if key not in self.entries:
+            self.entries[key] = value
+        return self.entries[key]
 
-    def summary(self) -> Dict[str, Any]:
-        return {
-            "reserve": self.reserve,
-            "remaining_quota": self.remaining_quota,
-            "used_today": self.used_today,
-            "by_source": self.by_source,
-        }
+    def get(self, config: Dict[str, Any]) -> Optional[str]:
+        return self.entries.get(self._key(config))
+
+    def has_duplicate(self, config: Dict[str, Any]) -> bool:
+        return self._key(config) in self.entries
 
 
-DEFAULT_QUOTA_LEDGER = QuotaLedger()
+DEFAULT_HASH_CACHE = HashCache()

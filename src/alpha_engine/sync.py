@@ -1,34 +1,33 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Dict, List, Any
 
 
 @dataclass
-class SyncResult:
-    updated: int = 0
-    inserted: int = 0
-    deleted: int = 0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+class Task:
+    name: str
+    source: str
+    core_allocation: int = 1
+    status: str = "queued"
 
 
-@dataclass
-class SyncService:
-    region: str = "ALL"
-    last_sync_at: str | None = None
-    field_count: int = 0
+class TaskScheduler:
+    def __init__(self, max_slots: int = 10):
+        self.max_slots = max_slots
+        self.active_tasks: List[Task] = []
 
-    def sync(self, region: str | None = None) -> SyncResult:
-        effective_region = region or self.region
-        self.region = effective_region
-        self.last_sync_at = "2026-10-21T00:00:00Z"
-        self.field_count = 12
-        return SyncResult(
-            updated=1,
-            inserted=12,
-            deleted=0,
-            metadata={"region": effective_region, "fields": self.field_count},
-        )
+    def register_task(self, task: Task) -> None:
+        self.active_tasks.append(task)
+
+    def has_capacity(self) -> bool:
+        return len(self.active_tasks) <= self.max_slots
+
+    def task_count(self) -> int:
+        return len(self.active_tasks)
+
+    def summary(self) -> Dict[str, Any]:
+        return {"max_slots": self.max_slots, "active_tasks": len(self.active_tasks), "task_count": len(self.active_tasks)}
 
 
-DEFAULT_SYNC_SERVICE = SyncService()
+DEFAULT_TASK_SCHEDULER = TaskScheduler()

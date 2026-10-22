@@ -1,67 +1,76 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
-class CheckResult:
-    name: str
-    passed: bool
-    score: float
-    margin: float
-    threshold: float
-    detail: str = ""
+class Hypothesis:
+    dataset: str
+    rationale: str
+    expression: str
+    prompt_version: str
 
 
-class Scorer:
-    def score_alpha(self, result: Dict[str, Any]) -> List[CheckResult]:
-        checks: List[CheckResult] = []
-        turnover = float(result.get("turnover", 0.0))
-        sharpe = float(result.get("sharpe", 0.0))
-        correlation = float(result.get("correlation", 0.0))
-        fitness = float(result.get("fitness", 0.0))
-
-        checks.append(self._make_check(
-            name="turnover_floor",
-            passed=turnover >= 0.125,
-            score=turnover,
-            margin=turnover - 0.125,
-            threshold=0.125,
-            detail="turnover must be >= 12.5%"
-        ))
-        checks.append(self._make_check(
-            name="is_ladder",
-            passed=(sharpe >= 1.58) or (turnover < 0.30 and sharpe >= 1.58),
-            score=sharpe,
-            margin=sharpe - 1.58,
-            threshold=1.58,
-            detail="IS ladder threshold applies"
-        ))
-        checks.append(self._make_check(
-            name="correlation",
-            passed=correlation <= 0.70,
-            score=correlation,
-            margin=0.70 - correlation,
-            threshold=0.70,
-            detail="correlation threshold"
-        ))
-        checks.append(self._make_check(
-            name="fitness",
-            passed=fitness >= 0.0,
-            score=fitness,
-            margin=fitness,
-            threshold=0.0,
-            detail="fitness must be non-negative"
-        ))
-        return checks
-
-    @staticmethod
-    def _make_check(name: str, passed: bool, score: float, margin: float, threshold: float, detail: str) -> CheckResult:
-        return CheckResult(name=name, passed=passed, score=score, margin=margin, threshold=threshold, detail=detail)
-
-    def clean_alpha(self, result: Dict[str, Any]) -> bool:
-        return all(check.passed for check in self.score_alpha(result))
+@dataclass
+class LineageRecord:
+    parent: Optional[str]
+    settings: Dict[str, Any]
+    result: Dict[str, Any]
+    failure_reason: Optional[str]
+    prompt_version: str
 
 
-DEFAULT_SCORER = Scorer()
+class CreationLoop:
+    def __init__(self):
+        self.hypotheses: List[Hypothesis] = []
+        self.lineage: List[LineageRecord] = []
+
+    def select_datasets(self, datasets: List[str], *, user_filters: Optional[Dict[str, Any]] = None) -> List[str]:
+        if not datasets:
+            return ["USA_D0_TOP", "ASI_D1_TOP"]
+        return datasets
+
+    def generate_hypotheses(self, datasets: List[str], *, prompt_version: str = "alpha_generation") -> List[Hypothesis]:
+        items = []
+        for dataset in datasets:
+            items.append(
+                Hypothesis(
+                    dataset=dataset,
+                    rationale=f"Economic signal in {dataset} and align with the user’s factor exposure.",
+                    expression=f"alpha_{dataset.lower()}_signal",
+                    prompt_version=prompt_version,
+                )
+            )
+        self.hypotheses.extend(items)
+        return items
+
+    def generate_expressions(self, hypotheses: List[Hypothesis]) -> List[Dict[str, Any]]:
+        expressions = []
+        for h in hypotheses:
+            expressions.append({"dataset": h.dataset, "expression": h.expression, "hypothesis": h.rationale, "prompt_version": h.prompt_version})
+        return expressions
+
+    def run_pipeline(self, config: Dict[str, Any]) -> Dict[str, Any]:
+        selected = self.select_datasets(config.get("datasets", []), user_filters=config.get("user_filters"))
+        hypotheses = self.generate_hypotheses(selected, prompt_version=config.get("prompt_version", "alpha_generation"))
+        expressions = self.generate_expressions(hypotheses)
+        result = {
+            "selected_datasets": selected,
+            "count": len(expressions),
+            "expressions": expressions,
+            "status": "generated",
+        }
+        self.lineage.append(
+            LineageRecord(
+                parent=config.get("parent"),
+                settings=config,
+                result=result,
+                failure_reason=config.get("failure_reason"),
+                prompt_version=config.get("prompt_version", "alpha_generation"),
+            )
+        )
+        return result
+
+
+DEFAULT_CREATION_LOOP = CreationLoop()

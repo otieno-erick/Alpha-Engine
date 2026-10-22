@@ -1,37 +1,37 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any, Dict
-
-from alpha_engine.auth import AuthService, DEFAULT_AUTH_SERVICE
-from alpha_engine.hash_cache import HashCache, DEFAULT_HASH_CACHE
-from alpha_engine.quota import QuotaLedger, DEFAULT_QUOTA_LEDGER
-from alpha_engine.scheduler import TaskScheduler, DEFAULT_TASK_SCHEDULER
-from alpha_engine.sync import SyncService, DEFAULT_SYNC_SERVICE
+from dataclasses import dataclass
+from typing import Any, Dict, List
 
 
 @dataclass
-class Phase1State:
-    auth_service: AuthService = field(default_factory=AuthService)
-    sync_service: SyncService = field(default_factory=SyncService)
-    hash_cache: HashCache = field(default_factory=HashCache)
-    scheduler: TaskScheduler = field(default_factory=TaskScheduler)
-    quota: QuotaLedger = field(default_factory=QuotaLedger)
+class RepairInstruction:
+    failure: str
+    action: str
+    priority: int
 
-    def status(self) -> Dict[str, Any]:
-        return {
-            "auth": {
-                "authenticated": self.auth_service.session.authenticated,
-                "username": self.auth_service.session.username,
-            },
-            "sync": {
-                "region": self.sync_service.region,
-                "field_count": self.sync_service.field_count,
-            },
-            "hash_cache_size": len(self.hash_cache.entries),
-            "scheduler": self.scheduler.summary(),
-            "quota": self.quota.summary(),
+
+class Diagnoser:
+    def __init__(self):
+        self.mapping = {
+            "turnover_floor": RepairInstruction("turnover_floor", "increase turnover or reduce turnover floor risk", 1),
+            "is_ladder": RepairInstruction("is_ladder", "adjust IS ladder and turnover assumptions", 2),
+            "correlation": RepairInstruction("correlation", "change dataset, region, or delta structure", 3),
+            "fitness": RepairInstruction("fitness", "rework operator settings and weights", 4),
         }
 
+    def diagnose(self, checks: List[Dict[str, Any]]) -> Dict[str, Any]:
+        for check in checks:
+            if not check.get("passed", True):
+                failure = check.get("name")
+                instruction = self.mapping.get(failure, RepairInstruction(failure, "review configuration", 999))
+                return {
+                    "first_failure": failure,
+                    "action": instruction.action,
+                    "priority": instruction.priority,
+                    "margin": check.get("margin", 0.0),
+                }
+        return {"first_failure": None, "action": "no repair required", "priority": 0, "margin": 0.0}
 
-DEFAULT_PHASE1_STATE = Phase1State()
+
+DEFAULT_DIAGNOSER = Diagnoser()

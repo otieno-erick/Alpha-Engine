@@ -1,49 +1,84 @@
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import yaml
 
 
-VECTOR_FIELD_PATTERN = re.compile(r"\bvec_[A-Za-z0-9_]+\b")
-FIELD_PATTERN = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
+RULES_PATH = Path(__file__).resolve().parents[2] / "rules" / "phase2_rules.yaml"
 
 
 @dataclass
-class ValidationResult:
-    valid: bool
-    errors: List[str]
+class RuleRecord:
+    key: str
+    value: Any
+    source: str
+    last_verified: str
+    tier: Optional[str] = None
+    delay: Optional[str] = None
+    region: Optional[str] = None
+    universe: Optional[str] = None
 
 
-class Validator:
-    def __init__(self, allowed_fields: Optional[Tuple[str, ...]] = None):
-        self.allowed_fields = allowed_fields or tuple()
+class RulesRegistry:
+    def __init__(self, rules_path: Optional[Path] = None):
+        self.rules_path = rules_path or RULES_PATH
+        self.rules = self._load_rules()
 
-    def validate_expression(self, expression: str) -> ValidationResult:
-        errors: List[str] = []
-        if not expression or not expression.strip():
-            errors.append("expression is empty")
-        if not re.fullmatch(r"[0-9A-Za-z_\s\+\-\*/\(\)\.,=<>\[\]{}:]*", expression):
-            errors.append("expression contains unsupported characters")
-        if expression.count("(") != expression.count(")"):
-            errors.append("expression has mismatched parentheses")
-        if re.search(r"\bvec_\w+\b", expression) and "vec_" not in expression:
-            errors.append("vector fields must use a vec_ operator")
-        # field-access check
-        fields = set(FIELD_PATTERN.findall(expression))
-        forbidden = [field for field in fields if field.startswith("vec_") and field not in self.allowed_fields]
-        if forbidden:
-            errors.append(f"unknown vector field(s): {', '.join(sorted(forbidden))}")
-        return ValidationResult(valid=not errors, errors=errors)
+    def _load_rules(self) -> Dict[str, Any]:
+        with self.rules_path.open("r", encoding="utf-8") as fh:
+            data = yaml.safe_load(fh) or {}
+        return data
 
-    def validate_settings(self, settings: Dict[str, Any]) -> ValidationResult:
-        errors: List[str] = []
-        window = settings.get("window")
-        if window is not None and window not in {5, 10, 21, 63, 121, 252}:
-            errors.append("window value is outside the allowed grid")
-        if settings.get("operators") is not None and settings["operators"] > 8:
-            errors.append("operator count exceeds the Power Pool limit")
-        return ValidationResult(valid=not errors, errors=errors)
+    def lookup(self, *, key: str, tier: str = "user", delay: str = "D0", region: str = "USA", universe: str = "TOP") -> Any:
+        rules = self.rules.get("rules", {})
+        candidates = rules.get(key, [])
+        for item in candidates:
+            if item.get("tier") == tier and item.get("delay") == delay and item.get("region") == region and item.get("universe") == universe:
+                return item.get("value")
+        for item in candidates:
+            if item.get("tier") == tier and item.get("delay") == delay and item.get("region") == region and item.get("universe") in (None, "ALL"):
+                return item.get("value")
+        for item in candidates:
+            if item.get("tier") == tier and item.get("delay") == delay and item.get("region") in (None, "ALL") and item.get("universe") == universe:
+                return item.get("value")
+        for item in candidates:
+            if item.get("tier") == tier and item.get("delay") == delay:
+                return item.get("value")
+        raise KeyError(f"Rule not found for key={key}, tier={tier}, delay={delay}, region={region}, universe={universe}")
+
+    def has_stale_rules(self, stale_after_days: int = 90) -> List[str]:
+        stale = []
+        cutoff = datetime.now() - timedelta(days=stale_after_days)
+        for key, items in self.rules.get("rules", {}).items():
+            for item in items:
+                last_verified = item.get("last_verified")
+                if not last_verified:
+                    stale.append(key)
+                    continue
+                try:
+                    if datetime.strptime(last_verified, "%Y-%m-%d") < cutoff:
+                        stale.append(key)
+                except ValueError:
+                    stale.append(key)
+        return stale
+
+    def unresolved_conflicts(self) -> List[str]:
+        conflicts = []
+        for key, items in self.rules.get("rules", {}).items():
+            seen = set()
+            for item in items:
+                if item.get("value") is None:
+                    continue
+                tag = (item.get("tier"), item.get("delay"), item.get("region"), item.get("universe"))
+                if tag in seen:
+                    conflicts.append(key)
+                    break
+                seen.add(tag)
+        return conflicts
 
 
-DEFAULT_VALIDATOR = Validator()
+DEFAULT_RULES_REGISTRY = RulesRegistry()
