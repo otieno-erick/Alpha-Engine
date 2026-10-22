@@ -1,41 +1,31 @@
-rules:
-  turnover_floor:
-    - tier: user
-      delay: D0
-      region: USA
-      universe: TOP
-      value: 0.125
-      source: "WorldQuant Brain reference table"
-      last_verified: "2026-10-22"
-  sharpe_floor:
-    - tier: user
-      delay: D0
-      region: USA
-      universe: TOP
-      value: 1.58
-      source: "WorldQuant Brain reference table"
-      last_verified: "2026-10-22"
-  correlation_limit:
-    - tier: user
-      delay: D0
-      region: USA
-      universe: TOP
-      value: 0.70
-      source: "WorldQuant Brain checklist"
-      last_verified: "2026-10-22"
-  power_pool_limit:
-    - tier: user
-      delay: D0
-      region: ALL
-      universe: TOP
-      value: 8
-      source: "Power Pool constraints"
-      last_verified: "2026-10-22"
-  allowed_windows:
-    - tier: user
-      delay: D0
-      region: ALL
-      universe: ALL
-      value: [5, 10, 21, 63, 121, 252]
-      source: "validator grid"
-      last_verified: "2026-10-22"
+endpoints:
+  authentication:
+    path: "/authentication"
+    method: "POST"
+    source: "ace_lib.py"
+    verified_date: "2026-10-22"
+  simulations:
+    path: "/simulations"
+    method: "POST"
+    source: "ace_lib.py"
+    verified_date: "2026-10-22"
+  alpha_detail:
+    path: "/alphas/{alpha_id}"
+    method: "GET"
+    source: "ace_lib.py"
+    verified_date: "2026-10-22"
+  check_submission:
+    path: "/alphas/{alpha_id}/check"
+    method: "GET"
+    source: "ace_lib.py"
+    verified_date: "2026-10-22"
+  prod_correlation:
+    path: "/alphas/{alpha_id}/correlations/prod"
+    method: "GET"
+    source: "ace_lib.py"
+    verified_date: "2026-10-22"
+  self_correlation:
+    path: "/alphas/{alpha_id}/correlations/self"
+    method: "GET"
+    source: "ace_lib.py"
+    verified_date: "2026-10-22"

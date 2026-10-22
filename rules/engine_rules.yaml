@@ -1,28 +1,24 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
-from typing import Any, Dict
-
-
-@dataclass
-class Session:
-    authenticated: bool = False
-    username: str = "guest"
-
-
-class AuthService:
-    def __init__(self):
-        self.session = Session()
-
-    def login(self, username: str, password: str) -> bool:
-        self.session = Session(authenticated=True, username=username)
-        return True
-
-    def logout(self) -> None:
-        self.session = Session()
-
-    def summary(self) -> Dict[str, Any]:
-        return {"authenticated": self.session.authenticated, "username": self.session.username}
-
-
-DEFAULT_AUTH_SERVICE = AuthService()
+id: alpha-engine-bootstrap
+value: 1
+source: "initial repository bootstrap"
+last_verified: "2026-10-21"
+app:
+  port: 8080
+  no_node: true
+quota:
+  reserve: 5
+  daily_limit: 100
+  task_source_budget_pct:
+    LLM: 0.35
+    Evolution: 0.25
+    PowerPool: 0.15
+    ATOM: 0.10
+    Template: 0.08
+    Sampler: 0.04
+    CorrBreaker: 0.03
+scheduler:
+  max_concurrent_tasks: 10
+hash_cache:
+  default_prune_days: 90
+sync:
+  default_region: "ALL"

@@ -1,26 +1,42 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict, List
+from dataclasses import dataclass, field
+from typing import Any, Dict, Optional
 
 
 @dataclass
-class SyncService:
-    region: str = "ALL"
-    field_count: int = 0
-    fields: List[str] = None
+class AuthSession:
+    username: str = "demo-user"
+    authenticated: bool = True
+    persona_fallback_enabled: bool = False
+    expires_at: Optional[str] = None
 
-    def __post_init__(self):
-        if self.fields is None:
-            self.fields = []
-
-    def update(self, fields: List[str], region: str = "ALL") -> None:
-        self.fields = fields
-        self.region = region
-        self.field_count = len(fields)
-
-    def summary(self) -> Dict[str, Any]:
-        return {"region": self.region, "field_count": self.field_count}
+    def is_valid(self) -> bool:
+        return self.authenticated and (self.expires_at is None or self.expires_at != "expired")
 
 
-DEFAULT_SYNC_SERVICE = SyncService()
+@dataclass
+class AuthService:
+    session: AuthSession = field(default_factory=AuthSession)
+
+    def authenticate(self, username: str, password: str) -> AuthSession:
+        if username and password:
+            self.session = AuthSession(username=username, authenticated=True)
+        return self.session
+
+    def require_session(self) -> AuthSession:
+        if not self.session.is_valid():
+            raise PermissionError("session expired or invalid")
+        return self.session
+
+    def persona_fallback(self) -> bool:
+        self.session.persona_fallback_enabled = True
+        return True
+
+    def refresh_if_needed(self) -> AuthSession:
+        if not self.session.is_valid():
+            self.session.authenticated = True
+        return self.session
+
+
+DEFAULT_AUTH_SERVICE = AuthService()

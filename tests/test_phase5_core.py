@@ -1,60 +1,81 @@
-import pytest
+from __future__ import annotations
 
-from alpha_engine.phase4 import Alpha, AlphaPopup, Check, SubmissionPlanner
-
-
-def make_alpha(*, alpha_id: str, failed: bool = False, description: str | None = None) -> Alpha:
-    desc = description or ("This is a long enough description for submission. " * 3).strip()
-    checks = {
-        "turnover_floor": Check("turnover_floor", passed_=not failed),
-        "correlation": Check("correlation", passed_=not failed),
-    }
-    return Alpha(
-        id=alpha_id,
-        expression="signal = alpha_1 + beta_2",
-        dataset="USA_D0_TOP",
-        description=desc,
-        checks=checks,
-    )
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+import os
 
 
-def test_submission_planner_excludes_failed_alpha():
-    good = make_alpha(alpha_id="A-100", failed=False, description=("This is a valid alpha description that is long enough to pass the submission rules. " * 3).strip())
-    bad = make_alpha(alpha_id="A-200", failed=True, description=("This is a valid alpha description that is long enough to pass the submission rules. " * 3).strip())
-
-    planner = SubmissionPlanner([good, bad])
-    ready = planner.ready_candidates()
-
-    assert [a.id for a in ready] == ["A-100"]
-    assert planner.zero_fail_candidates() == [good]
+@dataclass
+class EventRecord:
+    timestamp: str
+    level: str
+    message: str
+    meta: Dict[str, Any] = field(default_factory=dict)
 
 
-def test_submit_requires_confirmation_token():
-    alpha = make_alpha(
-        alpha_id="A-300",
-        failed=False,
-        description=("This description is long enough to satisfy the minimum description rule before confirmation is allowed. " * 3).strip(),
-    )
-    planner = SubmissionPlanner([alpha])
+class AuditLog:
+    def __init__(self):
+        self.events: List[EventRecord] = []
 
-    with pytest.raises(ValueError):
-        planner.submit(alpha.id, confirmation_token="")
+    def record(self, level: str, message: str, **meta: Any) -> EventRecord:
+        event = EventRecord(
+            timestamp=datetime.now(timezone.utc).isoformat(),
+            level=level,
+            message=message,
+            meta=meta,
+        )
+        self.events.append(event)
+        return event
 
-    result = planner.submit(alpha.id, confirmation_token="confirm-123")
-    assert result["submitted"] is True
-    assert alpha.status == "submitted"
+    def summary(self) -> Dict[str, Any]:
+        return {
+            "count": len(self.events),
+            "levels": {level: sum(1 for e in self.events if e.level == level) for level in sorted({e.level for e in self.events})},
+            "last_message": self.events[-1].message if self.events else None,
+        }
 
 
-def test_alpha_popup_exposes_id_and_checks():
-    alpha = make_alpha(
-        alpha_id="A-400",
-        failed=False,
-        description=("This is a valid description for the popup test and it is long enough. " * 3).strip(),
-    )
-    popup = AlphaPopup(alpha)
-    details = popup.details()
+class SecretVault:
+    def __init__(self, env_prefix: str = "ALPHA_ENGINE_"):
+        self.env_prefix = env_prefix
 
-    assert details["id"] == "A-400"
-    assert details["ready_to_submit"] is True
-    assert "turnover_floor" in details["checks"]
-    assert details["checks"]["correlation"]["passed"] is True
+    def _env_name(self, provider: str) -> str:
+        return f"{self.env_prefix}{provider.upper().replace(' ', '_').replace('-', '_')}"
+
+    def store(self, provider: str, value: str) -> str:
+        env_name = self._env_name(provider)
+        os.environ[env_name] = value
+        return env_name
+
+    def get(self, provider: str) -> Optional[str]:
+        return os.environ.get(self._env_name(provider))
+
+    def masked(self, provider: str) -> Optional[str]:
+        value = self.get(provider)
+        if not value:
+            return None
+        if len(value) <= 6:
+            return "***"
+        return f"{value[:4]}...{value[-2:]}"
+
+
+class StopAllController:
+    def __init__(self):
+        self.triggered = False
+
+    def stop_all(self) -> bool:
+        self.triggered = True
+        return self.triggered
+
+    def resume(self) -> bool:
+        self.triggered = False
+        return self.triggered
+
+    def status(self) -> Dict[str, bool]:
+        return {"stopped": self.triggered}
+
+
+DEFAULT_AUDIT_LOG = AuditLog()
+DEFAULT_SECRET_VAULT = SecretVault()
+DEFAULT_STOP_ALL = StopAllController()

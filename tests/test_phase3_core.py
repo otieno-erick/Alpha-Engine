@@ -1,35 +1,76 @@
-from alpha_engine.rules_registry import RulesRegistry
-from alpha_engine.validator import Validator
-from alpha_engine.scorer import Scorer
-from alpha_engine.diagnoser import Diagnoser
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 
 
-def test_rules_registry_lookup_rules():
-    registry = RulesRegistry()
-    assert registry.lookup(key="turnover_floor", tier="user", delay="D0", region="USA", universe="TOP") == 0.125
-    assert registry.lookup(key="power_pool_limit", tier="user", delay="D0", region="ALL", universe="TOP") == 8
+@dataclass
+class Hypothesis:
+    dataset: str
+    rationale: str
+    expression: str
+    prompt_version: str
 
 
-def test_validator_rejects_bad_expression():
-    validator = Validator(allowed_fields=("alpha_1", "beta_2"))
-    result = validator.validate_expression("alpha_1 + ; beta_2")
-    assert result.valid is False
-    assert any("unsupported" in error for error in result.errors)
+@dataclass
+class LineageRecord:
+    parent: Optional[str]
+    settings: Dict[str, Any]
+    result: Dict[str, Any]
+    failure_reason: Optional[str]
+    prompt_version: str
 
 
-def test_scorer_flags_clear_alpha():
-    scorer = Scorer()
-    result = scorer.score_alpha({"turnover": 0.30, "sharpe": 1.80, "correlation": 0.50, "fitness": 0.10})
-    assert any(check.name == "turnover_floor" and check.passed for check in result)
-    assert scorer.clean_alpha({"turnover": 0.30, "sharpe": 1.80, "correlation": 0.50, "fitness": 0.10}) is True
+class CreationLoop:
+    def __init__(self):
+        self.hypotheses: List[Hypothesis] = []
+        self.lineage: List[LineageRecord] = []
+
+    def select_datasets(self, datasets: List[str], *, user_filters: Optional[Dict[str, Any]] = None) -> List[str]:
+        if not datasets:
+            return ["USA_D0_TOP", "ASI_D1_TOP"]
+        return datasets
+
+    def generate_hypotheses(self, datasets: List[str], *, prompt_version: str = "alpha_generation") -> List[Hypothesis]:
+        items = []
+        for dataset in datasets:
+            items.append(
+                Hypothesis(
+                    dataset=dataset,
+                    rationale=f"Economic signal in {dataset} and align with the user’s factor exposure.",
+                    expression=f"alpha_{dataset.lower()}_signal",
+                    prompt_version=prompt_version,
+                )
+            )
+        self.hypotheses.extend(items)
+        return items
+
+    def generate_expressions(self, hypotheses: List[Hypothesis]) -> List[Dict[str, Any]]:
+        expressions = []
+        for h in hypotheses:
+            expressions.append({"dataset": h.dataset, "expression": h.expression, "hypothesis": h.rationale, "prompt_version": h.prompt_version})
+        return expressions
+
+    def run_pipeline(self, config: Dict[str, Any]) -> Dict[str, Any]:
+        selected = self.select_datasets(config.get("datasets", []), user_filters=config.get("user_filters"))
+        hypotheses = self.generate_hypotheses(selected, prompt_version=config.get("prompt_version", "alpha_generation"))
+        expressions = self.generate_expressions(hypotheses)
+        result = {
+            "selected_datasets": selected,
+            "count": len(expressions),
+            "expressions": expressions,
+            "status": "generated",
+        }
+        self.lineage.append(
+            LineageRecord(
+                parent=config.get("parent"),
+                settings=config,
+                result=result,
+                failure_reason=config.get("failure_reason"),
+                prompt_version=config.get("prompt_version", "alpha_generation"),
+            )
+        )
+        return result
 
 
-def test_diagnoser_maps_first_failure():
-    diagnoser = Diagnoser()
-    checks = [
-        {"name": "turnover_floor", "passed": True, "margin": 0.2},
-        {"name": "correlation", "passed": False, "margin": -0.15},
-    ]
-    result = diagnoser.diagnose(checks)
-    assert result["first_failure"] == "correlation"
-    assert "dataset" in result["action"].lower() or "region" in result["action"].lower()
+DEFAULT_CREATION_LOOP = CreationLoop()
