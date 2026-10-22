@@ -33,28 +33,28 @@
 | T-06 | `src/alpha_engine/scheduler.py` | restart resilience test | todo | 2026-10-22 |
 | Q-01 | `src/alpha_engine/quota.py` | reserve check test | todo | 2026-10-22 |
 | Q-02 | `src/alpha_engine/quota.py` | quota ledger test | todo | 2026-10-22 |
-| R-01 | `rules/engine_rules.yaml` | rules lookup test | todo | 2026-10-22 |
-| R-02 | `rules/engine_rules.yaml` | neutralization matrix load test | todo | 2026-10-22 |
-| R-03 | `rules/engine_rules.yaml` | stale rule validation test | todo | 2026-10-22 |
+| R-01 | `src/alpha_engine/rules_registry.py`, `rules/phase2_rules.yaml` | `test_rules_registry_lookup_rules` | passing | 2026-10-22 |
+| R-02 | `src/alpha_engine/rules_registry.py`, `rules/phase2_rules.yaml` | rules matrix/load test | in progress | 2026-10-22 |
+| R-03 | `src/alpha_engine/rules_registry.py` | stale-rule check test | todo | 2026-10-22 |
 | R-04 | `OPEN_QUESTIONS.md` | release conflict check | todo | 2026-10-22 |
-| V-01 | `src/alpha_engine/` | Fast Expression syntax test | todo | 2026-10-22 |
-| V-02 | `src/alpha_engine/` | vec operator validation test | todo | 2026-10-22 |
-| V-03 | `src/alpha_engine/` | grid validation test | todo | 2026-10-22 |
-| V-04 | `src/alpha_engine/` | power pool constraint test | todo | 2026-10-22 |
-| V-05 | `src/alpha_engine/` | access validation test | todo | 2026-10-22 |
-| V-06 | `src/alpha_engine/` | duplicate rejection via cache | todo | 2026-10-22 |
-| C-01 | `src/alpha_engine/` | scorer parity test | todo | 2026-10-22 |
-| C-02 | `src/alpha_engine/` | margin reporting test | todo | 2026-10-22 |
-| C-03 | `src/alpha_engine/` | universe formula test | todo | 2026-10-22 |
-| C-04 | `src/alpha_engine/` | IS Ladder test | todo | 2026-10-22 |
-| C-05 | `src/alpha_engine/` | fitness formula test | todo | 2026-10-22 |
-| C-06 | `src/alpha_engine/` | weight mode test | todo | 2026-10-22 |
-| C-07 | `rules/engine_rules.yaml` | regional extras test | todo | 2026-10-22 |
-| C-08 | `src/alpha_engine/` | clean alpha test | todo | 2026-10-22 |
-| D-01 | `src/alpha_engine/` | first failure action test | todo | 2026-10-22 |
-| D-02 | `src/alpha_engine/` | repair mapping test | todo | 2026-10-22 |
-| D-03 | `src/alpha_engine/` | structural repair trigger test | todo | 2026-10-22 |
-| D-04 | `src/alpha_engine/` | retry budget exhaustion test | todo | 2026-10-22 |
+| V-01 | `src/alpha_engine/validator.py` | `test_validator_rejects_bad_expression` | passing | 2026-10-22 |
+| V-02 | `src/alpha_engine/validator.py` | vec operator validation test | todo | 2026-10-22 |
+| V-03 | `src/alpha_engine/validator.py` | grid validation test | todo | 2026-10-22 |
+| V-04 | `src/alpha_engine/validator.py` | power pool constraint test | todo | 2026-10-22 |
+| V-05 | `src/alpha_engine/validator.py` | access validation test | todo | 2026-10-22 |
+| V-06 | `src/alpha_engine/validator.py` | duplicate rejection via cache | todo | 2026-10-22 |
+| C-01 | `src/alpha_engine/scorer.py` | scorer parity test | todo | 2026-10-22 |
+| C-02 | `src/alpha_engine/scorer.py` | margin reporting test | todo | 2026-10-22 |
+| C-03 | `src/alpha_engine/scorer.py` | universe formula test | todo | 2026-10-22 |
+| C-04 | `src/alpha_engine/scorer.py` | IS Ladder test | todo | 2026-10-22 |
+| C-05 | `src/alpha_engine/scorer.py` | fitness formula test | todo | 2026-10-22 |
+| C-06 | `src/alpha_engine/scorer.py` | weight mode test | todo | 2026-10-22 |
+| C-07 | `src/alpha_engine/scorer.py`, `rules/phase2_rules.yaml` | regional extras test | todo | 2026-10-22 |
+| C-08 | `src/alpha_engine/scorer.py` | clean alpha test | passing | 2026-10-22 |
+| D-01 | `src/alpha_engine/diagnoser.py` | `test_diagnoser_maps_first_failure` | passing | 2026-10-22 |
+| D-02 | `src/alpha_engine/diagnoser.py` | repair mapping test | todo | 2026-10-22 |
+| D-03 | `src/alpha_engine/diagnoser.py` | structural repair trigger test | todo | 2026-10-22 |
+| D-04 | `src/alpha_engine/diagnoser.py` | retry budget exhaustion test | todo | 2026-10-22 |
 | L-01 | `src/alpha_engine/` | provider cards UI test | todo | 2026-10-22 |
 | L-02 | `src/alpha_engine/` | provider key launch test | todo | 2026-10-22 |
 | L-03 | `src/alpha_engine/` | tab layout test | todo | 2026-10-22 |

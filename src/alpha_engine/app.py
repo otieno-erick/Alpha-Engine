@@ -1,40 +1,37 @@
-from pathlib import Path
+from __future__ import annotations
 
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-import yaml
-
-from alpha_engine.phase1 import DEFAULT_PHASE1_STATE
-
-app = FastAPI(title="Alpha Engine", version="0.1.0")
+from dataclasses import dataclass
+from typing import Any, Dict, List
 
 
-def _load_rules() -> dict:
-    rules_path = Path(__file__).resolve().parents[2] / "rules" / "engine_rules.yaml"
-    with rules_path.open("r", encoding="utf-8") as fh:
-        data = yaml.safe_load(fh) or {}
-    return data
+@dataclass
+class RepairInstruction:
+    failure: str
+    action: str
+    priority: int
 
 
-@app.get("/")
-def root() -> dict:
-    return {"service": "alpha-engine", "status": "ready"}
+class Diagnoser:
+    def __init__(self):
+        self.mapping = {
+            "turnover_floor": RepairInstruction("turnover_floor", "increase turnover or reduce turnover floor risk", 1),
+            "is_ladder": RepairInstruction("is_ladder", "adjust IS ladder and turnover assumptions", 2),
+            "correlation": RepairInstruction("correlation", "change dataset, region, or delta structure", 3),
+            "fitness": RepairInstruction("fitness", "rework operator settings and weights", 4),
+        }
+
+    def diagnose(self, checks: List[Dict[str, Any]]) -> Dict[str, Any]:
+        for check in checks:
+            if not check.get("passed", True):
+                failure = check.get("name")
+                instruction = self.mapping.get(failure, RepairInstruction(failure, "review configuration", 999))
+                return {
+                    "first_failure": failure,
+                    "action": instruction.action,
+                    "priority": instruction.priority,
+                    "margin": check.get("margin", 0.0),
+                }
+        return {"first_failure": None, "action": "no repair required", "priority": 0, "margin": 0.0}
 
 
-@app.get("/health")
-def health() -> dict:
-    return {
-        "status": "ok",
-        "service": "alpha-engine",
-        "rules_loaded": bool(_load_rules()),
-    }
-
-
-@app.get("/rules")
-def read_rules() -> JSONResponse:
-    return JSONResponse(content=_load_rules())
-
-
-@app.get("/phase1/status")
-def phase1_status() -> dict:
-    return DEFAULT_PHASE1_STATE.status()
+DEFAULT_DIAGNOSER = Diagnoser()
