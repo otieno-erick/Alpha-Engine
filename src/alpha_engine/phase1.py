@@ -20,8 +20,14 @@ class Phase1State:
 
     def status(self) -> Dict[str, Any]:
         return {
-            "auth": {"authenticated": self.auth_service.session.authenticated, "username": self.auth_service.session.username},
-            "sync": {"region": self.sync_service.region, "field_count": self.sync_service.field_count},
+            "auth": {
+                "authenticated": self.auth_service.session.authenticated,
+                "username": self.auth_service.session.username,
+            },
+            "sync": {
+                "region": self.sync_service.region,
+                "field_count": self.sync_service.field_count,
+            },
             "hash_cache_size": len(self.hash_cache.entries),
             "scheduler": self.scheduler.summary(),
             "quota": self.quota.summary(),
