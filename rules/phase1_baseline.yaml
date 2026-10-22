@@ -1,13 +1,24 @@
 - id: quota.reserve
   value: 10
-  source: "Alpha Engine policy; this is a baseline until the live BRAIN rules are confirmed"
-  last_verified: "2026-10-22"
+  source: ""
+  last_verified: ""
 - id: scheduler.max_concurrent
   value: 10
-  source: "Alpha Engine policy; baseline concurrent slot limit"
-  last_verified: "2026-10-22"
+  source: ""
+  last_verified: ""
 - id: hash_cache.prune_days
   value: 90
-  source: "Alpha Engine policy; prune default"
-  last_verified: "2026-10-22"
-
+  source: ""
+  last_verified: ""
+- id: rules.consultant_d1_sharpe
+  value: 1.58
+  source: ""
+  last_verified: ""
+- id: rules.max_weight_fail_pct
+  value: 10.0
+  source: ""
+  last_verified: ""
+- id: rules.max_weight_warn_pct
+  value: 8.0
+  source: ""
+  last_verified: ""
