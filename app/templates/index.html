@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.13.0/dist/cdn.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Alpha Engine</title>
+  </head>
+  <body class="bg-slate-100 text-slate-900">
+    <main class="mx-auto max-w-5xl py-12 px-4">
+      <header class="mb-8 flex items-center justify-between gap-4">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Phase 1</p>
+          <h1 class="text-3xl font-bold">Alpha Engine</h1>
+        </div>
+        <div class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm">
+          <span class="font-semibold">Quota reserve:</span>
+          <span x-text="quota.reserve || 10">10</span>
+        </div>
+      </header>
+
+      <section class="grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-sm text-slate-500">Remaining quota</p>
+          <p class="mt-2 text-3xl font-bold" x-text="quota.remaining || 100">100</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-sm text-slate-500">Saved by hash cache</p>
+          <p class="mt-2 text-3xl font-bold" x-text="cache.saved || 0">0</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-sm text-slate-500">Running tasks</p>
+          <p class="mt-2 text-3xl font-bold" x-text="tasks.length || 0">0</p>
+        </div>
+      </section>
+
+      <section class="mt-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm" x-data="{
+        quota: {remaining: 100, reserve: 10},
+        cache: {saved: 0},
+        tasks: []
+      }">
+        <div class="flex items-center justify-between gap-4">
+          <h2 class="text-lg font-semibold">Runtime status</h2>
+          <button
+            class="rounded-md bg-slate-900 px-4 py-2 text-white"
+            hx-post="/api/tasks"
+            hx-vals='{"name":"phase1-task","source":"LLM","slots":2}'
+            hx-target="#task-output"
+            hx-swap="innerHTML"
+          >
+            Start task
+          </button>
+        </div>
+        <pre id="task-output" class="mt-4 whitespace-pre-wrap text-sm text-slate-700">Waiting for task status...</pre>
+      </section>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,7 @@
+pytest
+fastapi
+uvicorn
+jinja2
+pyyaml
+keyring
+
