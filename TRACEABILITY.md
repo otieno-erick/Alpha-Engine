@@ -1,15 +1,15 @@
 | Requirement ID | Module / file(s) | Test name | Status (todo / in progress / passing) | Last updated |
 |---|---|---|---|---|
-| G-03 | app/services/rules.py, rules/phase1_baseline.yaml | test_rules_loader_loads_yaml | in progress | 2026-10-22 |
-| G-06 | app/services/hash_cache.py | test_hash_cache_detects_duplicate_config | in progress | 2026-10-22 |
-| G-07 | app/services/quota.py | test_quota_guard_blocks_zero_remaining | in progress | 2026-10-22 |
-| G-10 | app/services/audit.py | test_audit_log_records_user_actions | in progress | 2026-10-22 |
-| A-04 | app/services/quota.py | test_quota_reads_x_ratelimit_remaining | in progress | 2026-10-22 |
-| H-01 | app/services/hash_cache.py | test_hash_changes_when_any_setting_changes | in progress | 2026-10-22 |
-| H-02 | app/services/hash_cache.py | test_duplicate_config_returns_cached_result | in progress | 2026-10-22 |
-| T-01 | app/services/scheduler.py | test_scheduler_uses_shared_slot_limit | in progress | 2026-10-22 |
-| T-05 | app/services/scheduler.py | test_scheduler_enforces_source_budget | in progress | 2026-10-22 |
-| Q-01 | app/services/quota.py | test_quota_guard_respects_reserve | in progress | 2026-10-22 |
+| G-03 | app/services/rules.py, rules/phase1_baseline.yaml | test_rules_loader_loads_yaml | passing | 2026-10-22 |
+| G-06 | app/services/hash_cache.py | test_hash_cache_detects_duplicate_config | passing | 2026-10-22 |
+| G-07 | app/services/quota.py | test_quota_guard_blocks_zero_remaining | passing | 2026-10-22 |
+| G-10 | app/services/audit.py | test_audit_log_records_user_actions | passing | 2026-10-22 |
+| A-04 | app/services/quota.py | test_quota_reads_x_ratelimit_remaining | passing | 2026-10-22 |
+| H-01 | app/services/hash_cache.py | test_hash_changes_when_any_setting_changes | passing | 2026-10-22 |
+| H-02 | app/services/hash_cache.py | test_duplicate_config_returns_cached_result | passing | 2026-10-22 |
+| T-01 | app/services/scheduler.py | test_scheduler_uses_shared_slot_limit | passing | 2026-10-22 |
+| T-05 | app/services/scheduler.py | test_scheduler_enforces_source_budget | passing | 2026-10-22 |
+| Q-01 | app/services/quota.py | test_quota_guard_respects_reserve | passing | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
 | A-01 | app/services/auth.py | pending | todo | |
 | A-02 | app/services/auth.py | pending | todo | |

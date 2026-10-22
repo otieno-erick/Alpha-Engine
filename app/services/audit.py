@@ -4,11 +4,12 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
-from app.db import get_connection
+from app.db import get_connection, init_db
 
 
 class AuditLog:
     def __init__(self):
+        init_db()
         self._entries: list[dict[str, Any]] = []
 
     def log(self, action: str, detail: dict[str, Any]) -> dict[str, Any]:
@@ -33,4 +34,3 @@ class AuditLog:
         )
         conn.commit()
         conn.close()
-
