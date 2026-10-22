@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alpha-engine"
+version = "0.1.0"
+description = "Alpha Engine desktop app skeleton for WorldQuant BRAIN alpha research"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["app", "app.services"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

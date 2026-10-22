@@ -4,17 +4,18 @@
 | G-06 | app/services/hash_cache.py | test_hash_cache_detects_duplicate_config | passing | 2026-10-22 |
 | G-07 | app/services/quota.py | test_quota_guard_blocks_zero_remaining | passing | 2026-10-22 |
 | G-10 | app/services/audit.py | test_audit_log_records_user_actions | passing | 2026-10-22 |
+| A-01 | app/services/auth.py | test_persona_fallback_is_detected | in progress | 2026-10-22 |
+| A-02 | app/services/auth.py | pending | todo | |
+| A-03 | app/services/client.py | test_client_parses_recordset_payload | in progress | 2026-10-22 |
 | A-04 | app/services/quota.py | test_quota_reads_x_ratelimit_remaining | passing | 2026-10-22 |
 | H-01 | app/services/hash_cache.py | test_hash_changes_when_any_setting_changes | passing | 2026-10-22 |
 | H-02 | app/services/hash_cache.py | test_duplicate_config_returns_cached_result | passing | 2026-10-22 |
 | T-01 | app/services/scheduler.py | test_scheduler_uses_shared_slot_limit | passing | 2026-10-22 |
 | T-05 | app/services/scheduler.py | test_scheduler_enforces_source_budget | passing | 2026-10-22 |
 | Q-01 | app/services/quota.py | test_quota_guard_respects_reserve | passing | 2026-10-22 |
+| K-01 | pyproject.toml | test_packaging_and_auth | in progress | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
-| A-01 | app/services/auth.py | pending | todo | |
-| A-02 | app/services/auth.py | pending | todo | |
-| A-03 | app/services/client.py | pending | todo | |
-| A-05 | app/services/batch.py | pending | todo | |
+| A-05 | app/services/batch.py | test_batch_splitter_keeps_like_configurations_together | in progress | 2026-10-22 |
 | A-06 | app/services/client.py | pending | todo | |
 | A-07 | app/templates/index.html | pending | todo | |
 | G-01 | package config | pending | todo | |
