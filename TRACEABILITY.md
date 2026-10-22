@@ -27,9 +27,11 @@
 | E-01 | app/services/evolution.py | test_seed_selection_and_mutation_generation | passing | 2026-10-22 |
 | E-02 | app/services/evolution.py | test_evolution_filter_keeps_only_valid_mutants | passing | 2026-10-22 |
 | E-03 | app/services/evolution.py | test_evolution_run_builds_candidate_pool | passing | 2026-10-22 |
-| P-01 | app/services/template_lab.py | test_template_lab_expands_and_counts_preview | in progress | 2026-10-22 |
-| B-01 | app/services/correlation_breaker.py | test_correlation_breaker_generates_structured_variants | in progress | 2026-10-22 |
-| X-01 | app/services/sampler.py | test_sampler_builds_setting_grid_for_defaults | in progress | 2026-10-22 |
+| P-01 | app/services/template_lab.py | test_template_lab_expands_and_counts_preview | passing | 2026-10-22 |
+| B-01 | app/services/correlation_breaker.py | test_correlation_breaker_generates_structured_variants | passing | 2026-10-22 |
+| X-01 | app/services/sampler.py | test_sampler_builds_setting_grid_for_defaults | passing | 2026-10-22 |
+| MB-01 | app/services/phase6.py | test_mobile_page_requires_token_when_enabled | in progress | 2026-10-22 |
+| F-04 | app/services/phase6.py | test_audit_viewer_filters_and_summarizes_events | in progress | 2026-10-22 |
 | K-01 | pyproject.toml | passing | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
 | A-02 | app/services/auth.py | pending | todo | |
