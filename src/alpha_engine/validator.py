@@ -1,84 +1,39 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Any, Dict, List, Optional
-
-import yaml
-
-
-RULES_PATH = Path(__file__).resolve().parents[2] / "rules" / "phase2_rules.yaml"
+from dataclasses import dataclass, field
+from typing import Any, Dict, Iterable, List, Optional
 
 
 @dataclass
-class RuleRecord:
-    key: str
-    value: Any
-    source: str
-    last_verified: str
-    tier: Optional[str] = None
-    delay: Optional[str] = None
-    region: Optional[str] = None
-    universe: Optional[str] = None
+class BrainEndpoint:
+    name: str
+    path: str
+    method: str = "GET"
+    source: str = "ace_lib.py"
+    verified_date: str = "2026-10-22"
 
 
-class RulesRegistry:
-    def __init__(self, rules_path: Optional[Path] = None):
-        self.rules_path = rules_path or RULES_PATH
-        self.rules = self._load_rules()
+@dataclass
+class BrainEndpointCatalog:
+    endpoints: Dict[str, BrainEndpoint] = field(
+        default_factory=lambda: {
+            "authentication": BrainEndpoint("authentication", "/authentication", "POST"),
+            "list_alphas": BrainEndpoint("list_alphas", "/alphas", "GET"),
+            "alpha_detail": BrainEndpoint("alpha_detail", "/alphas/{alpha_id}", "GET"),
+            "check_submission": BrainEndpoint("check_submission", "/alphas/{alpha_id}/check", "GET"),
+            "prod_correlation": BrainEndpoint("prod_correlation", "/alphas/{alpha_id}/correlations/prod", "GET"),
+            "self_correlation": BrainEndpoint("self_correlation", "/alphas/{alpha_id}/correlations/self", "GET"),
+            "simulations": BrainEndpoint("simulations", "/simulations", "POST"),
+            "simulations_detail": BrainEndpoint("simulations_detail", "/simulations/{simulation_id}", "GET"),
+            "simulation_progress": BrainEndpoint("simulation_progress", "/simulations/{simulation_id}", "GET"),
+        }
+    )
 
-    def _load_rules(self) -> Dict[str, Any]:
-        with self.rules_path.open("r", encoding="utf-8") as fh:
-            data = yaml.safe_load(fh) or {}
-        return data
+    def get(self, name: str) -> Optional[BrainEndpoint]:
+        return self.endpoints.get(name)
 
-    def lookup(self, *, key: str, tier: str = "user", delay: str = "D0", region: str = "USA", universe: str = "TOP") -> Any:
-        rules = self.rules.get("rules", {})
-        candidates = rules.get(key, [])
-        for item in candidates:
-            if item.get("tier") == tier and item.get("delay") == delay and item.get("region") == region and item.get("universe") == universe:
-                return item.get("value")
-        for item in candidates:
-            if item.get("tier") == tier and item.get("delay") == delay and item.get("region") == region and item.get("universe") in (None, "ALL"):
-                return item.get("value")
-        for item in candidates:
-            if item.get("tier") == tier and item.get("delay") == delay and item.get("region") in (None, "ALL") and item.get("universe") == universe:
-                return item.get("value")
-        for item in candidates:
-            if item.get("tier") == tier and item.get("delay") == delay:
-                return item.get("value")
-        raise KeyError(f"Rule not found for key={key}, tier={tier}, delay={delay}, region={region}, universe={universe}")
-
-    def has_stale_rules(self, stale_after_days: int = 90) -> List[str]:
-        stale = []
-        cutoff = datetime.now() - timedelta(days=stale_after_days)
-        for key, items in self.rules.get("rules", {}).items():
-            for item in items:
-                last_verified = item.get("last_verified")
-                if not last_verified:
-                    stale.append(key)
-                    continue
-                try:
-                    if datetime.strptime(last_verified, "%Y-%m-%d") < cutoff:
-                        stale.append(key)
-                except ValueError:
-                    stale.append(key)
-        return stale
-
-    def unresolved_conflicts(self) -> List[str]:
-        conflicts = []
-        for key, items in self.rules.get("rules", {}).items():
-            seen = set()
-            for item in items:
-                if item.get("value") is None:
-                    continue
-                tag = (item.get("tier"), item.get("delay"), item.get("region"), item.get("universe"))
-                if tag in seen:
-                    conflicts.append(key)
-                    break
-                seen.add(tag)
-        return conflicts
+    def list_names(self) -> Iterable[str]:
+        return self.endpoints.keys()
 
 
-DEFAULT_RULES_REGISTRY = RulesRegistry()
+DEFAULT_BRAIN_ENDPOINTS = BrainEndpointCatalog()

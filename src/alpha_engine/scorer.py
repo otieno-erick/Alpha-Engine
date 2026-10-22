@@ -1,67 +1,37 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict, List
+from dataclasses import dataclass, field
+from typing import Any, Dict
+
+from alpha_engine.auth import AuthService, DEFAULT_AUTH_SERVICE
+from alpha_engine.hash_cache import HashCache, DEFAULT_HASH_CACHE
+from alpha_engine.quota import QuotaLedger, DEFAULT_QUOTA_LEDGER
+from alpha_engine.scheduler import TaskScheduler, DEFAULT_TASK_SCHEDULER
+from alpha_engine.sync import SyncService, DEFAULT_SYNC_SERVICE
 
 
 @dataclass
-class CheckResult:
-    name: str
-    passed: bool
-    score: float
-    margin: float
-    threshold: float
-    detail: str = ""
+class Phase1State:
+    auth_service: AuthService = field(default_factory=AuthService)
+    sync_service: SyncService = field(default_factory=SyncService)
+    hash_cache: HashCache = field(default_factory=HashCache)
+    scheduler: TaskScheduler = field(default_factory=TaskScheduler)
+    quota: QuotaLedger = field(default_factory=QuotaLedger)
+
+    def status(self) -> Dict[str, Any]:
+        return {
+            "auth": {
+                "authenticated": self.auth_service.session.authenticated,
+                "username": self.auth_service.session.username,
+            },
+            "sync": {
+                "region": self.sync_service.region,
+                "field_count": self.sync_service.field_count,
+            },
+            "hash_cache_size": len(self.hash_cache.entries),
+            "scheduler": self.scheduler.summary(),
+            "quota": self.quota.summary(),
+        }
 
 
-class Scorer:
-    def score_alpha(self, result: Dict[str, Any]) -> List[CheckResult]:
-        checks: List[CheckResult] = []
-        turnover = float(result.get("turnover", 0.0))
-        sharpe = float(result.get("sharpe", 0.0))
-        correlation = float(result.get("correlation", 0.0))
-        fitness = float(result.get("fitness", 0.0))
-
-        checks.append(self._make_check(
-            name="turnover_floor",
-            passed=turnover >= 0.125,
-            score=turnover,
-            margin=turnover - 0.125,
-            threshold=0.125,
-            detail="turnover must be >= 12.5%"
-        ))
-        checks.append(self._make_check(
-            name="is_ladder",
-            passed=(sharpe >= 1.58) or (turnover < 0.30 and sharpe >= 1.58),
-            score=sharpe,
-            margin=sharpe - 1.58,
-            threshold=1.58,
-            detail="IS ladder threshold applies"
-        ))
-        checks.append(self._make_check(
-            name="correlation",
-            passed=correlation <= 0.70,
-            score=correlation,
-            margin=0.70 - correlation,
-            threshold=0.70,
-            detail="correlation threshold"
-        ))
-        checks.append(self._make_check(
-            name="fitness",
-            passed=fitness >= 0.0,
-            score=fitness,
-            margin=fitness,
-            threshold=0.0,
-            detail="fitness must be non-negative"
-        ))
-        return checks
-
-    @staticmethod
-    def _make_check(name: str, passed: bool, score: float, margin: float, threshold: float, detail: str) -> CheckResult:
-        return CheckResult(name=name, passed=passed, score=score, margin=margin, threshold=threshold, detail=detail)
-
-    def clean_alpha(self, result: Dict[str, Any]) -> bool:
-        return all(check.passed for check in self.score_alpha(result))
-
-
-DEFAULT_SCORER = Scorer()
+DEFAULT_PHASE1_STATE = Phase1State()
