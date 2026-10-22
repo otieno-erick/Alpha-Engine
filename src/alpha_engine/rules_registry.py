@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -7,8 +7,12 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
+<<<<<<< Updated upstream
 
 RULES_PATH = Path(__file__).resolve().parents[2] / "rules" / "phase2_rules.yaml"
+=======
+RULES_PATH = Path(__file__).resolve().parents[1] / "rules" / "phase2_rules.yaml"
+>>>>>>> Stashed changes
 
 
 @dataclass

@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 from fastapi.testclient import TestClient
+=======
+﻿from fastapi.testclient import TestClient
+>>>>>>> Stashed changes
 
 from alpha_engine.app import app
 
