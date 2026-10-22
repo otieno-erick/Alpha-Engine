@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Dict
 
-from alpha_engine.auth import AuthService, DEFAULT_AUTH_SERVICE
-from alpha_engine.hash_cache import HashCache, DEFAULT_HASH_CACHE
-from alpha_engine.quota import QuotaLedger, DEFAULT_QUOTA_LEDGER
-from alpha_engine.scheduler import Task, TaskScheduler, DEFAULT_TASK_SCHEDULER
-from alpha_engine.sync import SyncService, DEFAULT_SYNC_SERVICE
+from alpha_engine.auth import AuthService
+from alpha_engine.hash_cache import HashCache
+from alpha_engine.quota import QuotaLedger
+from alpha_engine.scheduler import TaskScheduler
+from alpha_engine.sync import SyncService
 
 
 @dataclass
