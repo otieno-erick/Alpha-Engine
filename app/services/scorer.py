@@ -14,7 +14,7 @@ class Scorer:
         checks: list[dict[str, Any]] = []
 
         def add_check(check_id: str, value: float, threshold: float, *, applicable: bool = True):
-            margin = float(value) - float(threshold)
+            margin = round(float(value) - float(threshold), 2)
             checks.append(
                 {
                     "id": check_id,
