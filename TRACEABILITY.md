@@ -1,7 +1,7 @@
 | Requirement ID | Module / file(s) | Test name | Status (todo / in progress / passing) | Last updated |
 |---|---|---|---|---|
 | G-03 | app/services/rules.py, rules/phase1_baseline.yaml | test_rules_loader_loads_yaml | passing | 2026-10-22 |
-| G-04 | app/services/submission.py | test_submission_requires_explicit_confirmation | in progress | 2026-10-22 |
+| G-04 | app/services/submission.py | test_submission_requires_explicit_confirmation | passing | 2026-10-22 |
 | G-06 | app/services/hash_cache.py | test_hash_cache_detects_duplicate_config | passing | 2026-10-22 |
 | G-07 | app/services/quota.py | test_quota_guard_blocks_zero_remaining | passing | 2026-10-22 |
 | G-10 | app/services/audit.py | test_audit_log_records_user_actions | passing | 2026-10-22 |
@@ -22,9 +22,11 @@
 | D-01 | app/services/diagnoser.py | test_diagnoser_returns_first_failure_and_repair_instruction | passing | 2026-10-22 |
 | L-05 | app/services/llm_hub.py | test_router_uses_fallback_when_primary_is_exhausted | passing | 2026-10-22 |
 | M-05 | app/services/pipeline.py | test_pipeline_order_for_clean_alpha | passing | 2026-10-22 |
-| G-04 | app/services/submission.py | test_submission_requires_explicit_confirmation | in progress | 2026-10-22 |
-| J-02 | app/services/submission.py | test_submission_rejects_failed_alpha | in progress | 2026-10-22 |
-| AP-01 | app/services/submission.py | test_alpha_detail_exposes_core_fields | in progress | 2026-10-22 |
+| J-02 | app/services/submission.py | test_submission_rejects_failed_alpha | passing | 2026-10-22 |
+| AP-01 | app/services/submission.py | test_alpha_detail_exposes_core_fields | passing | 2026-10-22 |
+| E-01 | app/services/evolution.py | test_seed_selection_and_mutation_generation | in progress | 2026-10-22 |
+| E-02 | app/services/evolution.py | test_evolution_filter_keeps_only_valid_mutants | in progress | 2026-10-22 |
+| E-03 | app/services/evolution.py | test_evolution_run_builds_candidate_pool | in progress | 2026-10-22 |
 | K-01 | pyproject.toml | passing | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
 | A-02 | app/services/auth.py | pending | todo | |
@@ -38,4 +40,3 @@
 | C-02 | app/services/scorer.py | pending | todo | |
 | D-02 | app/services/diagnoser.py | pending | todo | |
 | L-01 | app/templates/ | pending | todo | |
-| E-01 | app/services/evolution.py | pending | todo | |
