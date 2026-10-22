@@ -13,17 +13,16 @@
 | T-01 | app/services/scheduler.py | test_scheduler_uses_shared_slot_limit | passing | 2026-10-22 |
 | T-05 | app/services/scheduler.py | test_scheduler_enforces_source_budget | passing | 2026-10-22 |
 | Q-01 | app/services/quota.py | test_quota_guard_respects_reserve | passing | 2026-10-22 |
-| R-01 | app/services/rules.py, rules/phase2_rules.yaml | test_rules_lookup_reads_phase2_values | in progress | 2026-10-22 |
-| R-02 | rules/phase2_rules.yaml | pending | todo | |
-| R-03 | app/services/rules.py | pending | todo | |
-| V-01 | app/services/validator.py | test_validator_rejects_vector_field_without_vec_operator | in progress | 2026-10-22 |
-| V-03 | app/services/validator.py | test_validator_rejects_off_grid_window | in progress | 2026-10-22 |
-| C-01 | app/services/scorer.py | test_scorer_reports_margin_for_sub_universe_example | in progress | 2026-10-22 |
-| C-04 | app/services/scorer.py | test_scorer_applies_is_ladder_discount_for_low_turnover | in progress | 2026-10-22 |
-| D-01 | app/services/diagnoser.py | test_diagnoser_returns_first_failure_and_repair_instruction | in progress | 2026-10-22 |
+| R-01 | app/services/rules.py, rules/phase2_rules.yaml | test_rules_lookup_reads_phase2_values | passing | 2026-10-22 |
+| V-01 | app/services/validator.py | test_validator_rejects_vector_field_without_vec_operator | passing | 2026-10-22 |
+| V-03 | app/services/validator.py | test_validator_rejects_off_grid_window | passing | 2026-10-22 |
+| C-01 | app/services/scorer.py | test_scorer_reports_margin_for_sub_universe_example | passing | 2026-10-22 |
+| C-04 | app/services/scorer.py | test_scorer_applies_is_ladder_discount_for_low_turnover | passing | 2026-10-22 |
+| D-01 | app/services/diagnoser.py | test_diagnoser_returns_first_failure_and_repair_instruction | passing | 2026-10-22 |
+| L-05 | app/services/llm_hub.py | test_router_uses_fallback_when_primary_is_exhausted | in progress | 2026-10-22 |
+| M-05 | app/services/pipeline.py | test_pipeline_order_for_clean_alpha | in progress | 2026-10-22 |
 | K-01 | pyproject.toml | passing | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
-| A-01 | app/services/auth.py | test_persona_fallback_is_detected | passing | 2026-10-22 |
 | A-02 | app/services/auth.py | pending | todo | |
 | A-06 | app/services/client.py | pending | todo | |
 | A-07 | app/templates/index.html | pending | todo | |
@@ -35,6 +34,6 @@
 | G-09 | app/services/scheduler.py | pending | todo | |
 | C-02 | app/services/scorer.py | pending | todo | |
 | D-02 | app/services/diagnoser.py | pending | todo | |
-| M-05 | app/services/pipeline.py | pending | todo | |
+| M-05 | app/services/pipeline.py | test_pipeline_uses_retry_budget_on_failures | in progress | 2026-10-22 |
 | L-01 | app/templates/ | pending | todo | |
 | E-01 | app/services/evolution.py | pending | todo | |

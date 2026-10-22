@@ -1,0 +1,12 @@
+- id: llm.router.default_provider
+  value: "openrouter"
+  source: "Phase 3 routing default"
+  last_verified: ""
+- id: llm.router.max_retries
+  value: 3
+  source: "Phase 3 pipeline retry budget"
+  last_verified: ""
+- id: llm.router.max_per_day
+  value: 1000
+  source: "Phase 3 default provider budget"
+  last_verified: ""
