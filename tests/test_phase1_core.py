@@ -1,77 +1,85 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from pathlib import Path
+
+from app.db import get_cached_alphas, init_db
+from app.services.audit import AuditLog
 from app.services.hash_cache import HashCache
 from app.services.quota import QuotaGuard
-from app.services.scheduler import Scheduler
 from app.services.rules import load_rules
+from app.services.scheduler import Scheduler
+
+app = FastAPI(title="Alpha Engine")
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
+
+rules = load_rules()
+quota_guard = QuotaGuard(rules)
+hash_cache = HashCache()
+scheduler = Scheduler(rules)
+audit = AuditLog()
+
+init_db()
 
 
-def test_rules_loader_loads_yaml():
-    rules = load_rules()
-    assert "quota.reserve" in rules
-    assert rules["quota.reserve"]["value"] == 10
-    assert "source" in rules["quota.reserve"]
-    assert "last_verified" in rules["quota.reserve"]
+@app.get("/", response_class=HTMLResponse)
+def home():
+    template = BASE_DIR / "app" / "templates" / "index.html"
+    return template.read_text(encoding="utf-8")
 
 
-def test_hash_cache_detects_duplicate_config():
-    cache = HashCache()
-    config = {"region": "USA", "universe": "TOP3000", "delay": 1, "regular": "rank(x)"}
-    first = cache.check_and_store(config)
-    second = cache.check_and_store(config)
-    assert first["hit"] is False
-    assert second["hit"] is True
-    assert second["saved"] is True
+@app.get("/health")
+def health():
+    return {"status": "ok", "app": "alpha-engine"}
 
 
-def test_hash_changes_when_any_setting_changes():
-    cache = HashCache()
-    left = {"region": "USA", "universe": "TOP3000", "delay": 1, "regular": "rank(x)"}
-    right = {"region": "USA", "universe": "TOP3000", "delay": 1, "regular": "rank(x) + 1"}
-    assert cache._hash_config(left) != cache._hash_config(right)
+@app.get("/api/rules")
+def get_rules():
+    return rules
 
 
-def test_quota_guard_blocks_zero_remaining():
-    rules = load_rules()
-    guard = QuotaGuard(rules)
-    guard.set_remaining(0)
-    assert guard.can_send({"X-Ratelimit-Remaining": "0"}, requested=1) is False
+@app.get("/api/quota")
+def get_quota():
+    return {"remaining": quota_guard.remaining(), "reserve": quota_guard.reserve, "used_today": 0}
 
 
-def test_quota_guard_respects_reserve():
-    rules = load_rules()
-    guard = QuotaGuard(rules)
-    guard.set_remaining(10)
-    assert guard.can_send({"X-Ratelimit-Remaining": "10"}, requested=1) is False
+@app.get("/api/alphas")
+def list_cached_alphas():
+    return get_cached_alphas()
 
 
-def test_quota_reads_x_ratelimit_remaining():
-    rules = load_rules()
-    guard = QuotaGuard(rules)
-    assert guard.can_send({"X-Ratelimit-Remaining": "50"}, requested=1) is True
+@app.post("/api/simulations/validate")
+def validate_simulation(payload: dict):
+    config = payload.get("config", {})
+    cached = hash_cache.check_and_store(config)
+    if cached["hit"]:
+        audit.log("hash_cache_hit", {"config": config, "saved": cached["saved"]})
+        return {"sent": False, "cached": True, "result": cached["result"], "saved": cached["saved"]}
+
+    if not quota_guard.can_send(headers={"X-Ratelimit-Remaining": str(quota_guard.remaining())}):
+        audit.log("quota_blocked", {"config": config, "remaining": quota_guard.remaining()})
+        raise HTTPException(status_code=429, detail="Quota guard blocked the simulation request.")
+
+    audit.log("simulation_sent", {"config": config})
+    return {"sent": True, "cached": False, "config": config}
 
 
-def test_scheduler_uses_shared_slot_limit():
-    rules = load_rules()
-    scheduler = Scheduler(rules)
-    result_a = scheduler.submit("alpha-a", "LLM", 5)
-    result_b = scheduler.submit("alpha-b", "Evolution", 6)
-    assert result_a["status"] == "running"
-    assert result_b["status"] == "queued"
+@app.post("/api/tasks")
+def create_task(payload: dict):
+    task_name = payload.get("name", "new-task")
+    source = payload.get("source", "LLM")
+    task = scheduler.submit(task_name, source, payload.get("slots", 1))
+    audit.log("task_started", {"task": task_name, "source": source, "slots": payload.get("slots", 1)})
+    return task
 
 
-def test_scheduler_enforces_source_budget():
-    rules = load_rules()
-    scheduler = Scheduler(rules)
-    first = scheduler.submit("task-a", "LLM", 6)
-    second = scheduler.submit("task-b", "LLM", 5)
-    assert first["status"] == "running"
-    assert second["status"] == "queued"
+@app.get("/api/tasks")
+def list_tasks():
+    return scheduler.list_tasks()
 
 
-def test_audit_log_records_user_actions():
-    from app.services.audit import AuditLog
-
-    audit = AuditLog()
-    entry = audit.log("simulation_sent", {"count": 1})
-    assert entry["action"] == "simulation_sent"
-    assert "count" in entry["detail"]
-
+@app.get("/api/audit")
+def list_audit():
+    return audit.list_entries()

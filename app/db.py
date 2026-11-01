@@ -34,6 +34,28 @@ def init_db() -> None:
         )
         """
     )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS alpha_cache (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            alpha_id TEXT NOT NULL,
+            dataset TEXT NOT NULL,
+            status TEXT NOT NULL,
+            expression TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
     conn.commit()
     conn.close()
 
+
+def get_cached_alphas() -> list[dict]:
+    conn = get_connection()
+    try:
+        cursor = conn.execute(
+            "SELECT alpha_id, dataset, status, expression, created_at FROM alpha_cache ORDER BY id DESC"
+        )
+        return [dict(row) for row in cursor.fetchall()]
+    finally:
+        conn.close()
