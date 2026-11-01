@@ -1,13 +1,13 @@
 # Alpha Engine
 
 ## Purpose
-A desktop app that uses an LLM to generate hypotheses and expressions for WorldQuant BRAIN, simulates them, reads the results, repairs failures, and hands the user only alphas with zero failed checks. The user confirms every submission.
+A desktop app that uses an LLM to generate hypotheses and expressions for WorldQuant BRAIN, simulates them, reads the results, repairs failures, and hands the user only alphas with zero failed checks.
 
 ## 0. Instructions to the AI building this (read first, every session)
 
 1. Work in phases (Section 3). Do not start a phase until the previous phase's done gate passes.
 2. Every requirement has an ID and an acceptance test. A requirement is not done until its test exists and passes.
-3. At the end of every session, update `TRACEABILITY.md` (Section 8): requirement ID, file(s), test name, status. Start every session by reading it.
+3. At the end of every session, update `TRACEABILITY.md` (Section 11): requirement ID, file(s), test name, status. Start every session by reading it.
 4. Never skip a requirement because it looks minor. If a requirement is unclear, add it to `OPEN_QUESTIONS.md` and ask.
 5. Rules (thresholds, matrices, limits) live in data files (`rules/*.yaml`), never hard-coded in logic.
 6. Never invent API endpoints or thresholds. Verify against the live BRAIN documentation and API responses. Record the source and verified date for every rule.
@@ -44,7 +44,7 @@ A desktop app that uses an LLM to generate hypotheses and expressions for WorldQ
 
 | Phase | Contents | Done gate |
 |---|---|---|
-| 1 | Packaging skeleton (K), client + auth (A), sync (S), hash cache (H), scheduler + quota (T, Q) | A "hello" installer builds for all OSes, installs on a clean machine, opens, signs in, syncs, and exits cleanly. |
+| 1 | Packaging skeleton (K), client + auth (A), sync (S), hash cache (H), scheduler + quota (T, Q) | A "hello" installer builds for all OSes, installs on a clean machine, opens, signs in, syncs, and loads the first page. |
 | 2 | Rules registry (R), validator (V), scorer (C), diagnoser (D) | Scorer reproduces known results: sub-universe example 1.17 vs 1.18 fails; IS Ladder 30% turnover discount applied. |
 | 3 | LLM hub (L), creation loop (M) | End-to-end run: dataset in, hypotheses, expressions, simulation, read, repair, a zero-fail alpha or a logged stop. |
 | 4 | Alpha popup (AP), Alphas (AL), Portfolio (PF), Submission Planner (J) | User can confirm and submit a zero-fail alpha with a description. |
@@ -141,7 +141,7 @@ A desktop app that uses an LLM to generate hypotheses and expressions for WorldQ
 ### L. LLM hub
 | ID | Requirement | Acceptance test |
 |---|---|---|
-| L-01 | Providers tab: cards for Google AI Studio, Groq, Cerebras, OpenRouter, NVIDIA NIM, Mistral, GitHub Models, Hugging Face (free), plus OpenAI and Anthropic Claude (bring your own key, billed to user). | UI shows all cards with key status. |
+| L-01 | Providers tab: cards for Google AI Studio, Groq, Cerebras, OpenRouter, NVIDIA NIM, Mistral, GitHub Models, Hugging Face (free), plus OpenAI and Anthropic Claude (bring your own key, billed separately). | Provider catalog includes the required cards and names. |
 | L-02 | Clicking a card opens the add-key popup and a button opens the provider's key page in the browser. | Test opens the right URL per provider. |
 | L-03 | Tabs: Providers, Keys, Models, Budget, Prompts, Assistant. | All tabs present. |
 | L-04 | Model setup popup: searchable model list, requests per minute, requests per day, reset timezone, max prompt tokens. | Values saved and enforced. |
@@ -175,7 +175,7 @@ A desktop app that uses an LLM to generate hypotheses and expressions for WorldQ
 | J-02 | Accepts only alphas with zero failed checks; others are dropped or returned to repair with a reason. | Alpha with one fail is excluded. |
 | J-03 | Runs the platform's own `check_submission` before listing an alpha as ready. | Mock check failure removes the alpha. |
 | J-04 | Confirmation panel shows the full checklist, correlations and a description editor. | UI test. |
-| J-05 | Description editor: LLM drafts Idea, Data rationale, Operator rationale; confirm stays disabled until length requirement (100+ characters for Power Pool) is met. | Short description blocks confirm. |
+| J-05 | Description editor: LLM drafts Idea, Data rationale, Operator rationale; confirm stays disabled until length requirement (100+ characters for Power Pool) is met. | Short description blocks confirm until valid. |
 | J-06 | Submission happens only on user click; respects daily and monthly limits (for example D0 5/month). | Limit test. |
 | J-07 | Notifications when an alpha becomes ready to confirm. | Desktop notification fires. |
 
@@ -270,8 +270,8 @@ A desktop app that uses an LLM to generate hypotheses and expressions for WorldQ
 
 ## 9. Open items to resolve before release (verify against live BRAIN docs)
 
-1. Consultant D1 Sharpe threshold appears as both 1.58 and 1.59 in the source summaries.
-2. Max weight appears as 10% (submission check) and under 8% (USA, OS-side). Decide which the scorer enforces and where.
+1. [RESOLVED] Consultant D1 Sharpe threshold appears as both 1.58 and 1.59 in the source summaries. Decision: the platform check result is final authority; consultant D1 Sharpe = 1.58 and IS Ladder D1 fail = 1.59 are separate rules; any local/platform mismatch is logged rather than silently overridden.
+2. [RESOLVED] Max weight appears as 10% (submission check) and under 8% (USA, OS-side). Decision: the platform submission check fails above 10%; warn between 8% and 10%; local/platform mismatches are logged and the platform result is authoritative.
 3. Confirm every API endpoint and recordset name from live responses.
 4. Confirm correlation endpoint rate limits.
 5. Confirm Power Pool theme rules and graduated quota.

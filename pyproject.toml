@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alpha-engine"
+dynamic = ["version"]
+description = "Alpha Engine desktop app skeleton for WorldQuant BRAIN alpha research"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "jinja2",
+    "pyyaml",
+    "keyring",
+    "psutil",
+    "pywebview",
+    "packaging",
+]
+
+[tool.setuptools]
+packages = ["app", "app.services"]
+
+[tool.setuptools.dynamic]
+version = {attr = "app.__version__"}
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
