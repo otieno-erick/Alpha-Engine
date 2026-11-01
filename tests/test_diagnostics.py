@@ -61,3 +61,10 @@ def test_redact_handles_nested_values_and_sensitive_inline_fields():
     assert "hunter2" not in result["message"]
     assert "abc123" not in result["message"]
     assert result["safe"] == 12
+
+
+def test_redact_scrubs_plaintext_credentials_from_messages():
+    message = redact("password=hunter2 and Bearer abc123")
+
+    assert "hunter2" not in message
+    assert "abc123" not in message

@@ -134,7 +134,7 @@ jobs:
           chmod +x AppDir/usr/bin/alpha-engine
           dpkg-deb --build AppDir "artifacts/alpha-engine_${version:-0.1.0}_amd64.deb"
           curl -fsSL -o linuxdeploy-x86_64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-          curl -fsSL -o linuxdeploy-plugin-gtk.sh https://github.com/linuxdeploy/linuxdeploy-plugin-gtk/releases/download/continuous/linuxdeploy-plugin-gtk.sh
+          curl -fsSL -o linuxdeploy-plugin-gtk.sh https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh
           chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-gtk.sh
           ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --executable AppDir/usr/lib/alpha-engine/AlphaEngine --desktop-file AppDir/usr/share/applications/alpha-engine.desktop --plugin gtk
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --output appimage
