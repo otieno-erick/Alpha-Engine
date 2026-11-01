@@ -119,8 +119,8 @@
 119| | K-03 | .github/workflows/release.yml, app/desktop.py, app/services/runtime_security.py | test_desktop_lifespan_stops_registered_children, test_global_runtime_terminates_managed_processes, test_global_runtime_kills_processes_that_do_not_terminate | in progress | 2026-11-01 |
 120| | K-04 | app/services/auto_update.py, app/main.py | test_auto_update_checks_github_releases, test_auto_update_does_not_report_current_release_as_an_update, test_auto_update_rejects_malformed_release, test_update_endpoint_reports_release_check_failures | passing | 2026-11-01 |
 121| | K-05 | README.md, tests/test_release_workflow.py | test_readme_documents_unsigned_build_warning | passing | 2026-11-01 |
-122| | K-06 | app/services/diagnostics.py, app/main.py | test_diagnostics_bundle_removes_secrets, test_redact_handles_nested_values_and_sensitive_inline_fields | in progress | 2026-11-01 |
-123| | K-07 | app/services/backup_restore.py | test_backup_restore_reproduces_local_data_state, test_restore_rejects_invalid_backup_without_changing_database, test_backup_rejects_same_source_and_destination, test_restore_rejects_same_source_and_destination | in progress | 2026-11-01 |
+122| | K-06 | app/services/diagnostics.py, app/main.py | test_diagnostics_bundle_removes_secrets, test_redact_handles_nested_values_and_sensitive_inline_fields | passing | 2026-11-01 |
+123| | K-07 | app/services/backup_restore.py | test_backup_restore_reproduces_local_data_state, test_restore_rejects_invalid_backup_without_changing_database, test_backup_rejects_same_source_and_destination, test_restore_rejects_same_source_and_destination | passing | 2026-11-01 |
 124| 
 125| | RESOLVED-RULE-01 | rules/*.yaml, app/services/rules.py | test_platform_rule_takes_precedence_over_local_mismatch | todo | 2026-11-01 |
 126| | RESOLVED-RULE-02 | rules/*.yaml, app/services/rules.py | test_local_platform_mismatch_is_logged | todo | 2026-11-01 |
