@@ -67,6 +67,18 @@ jobs:
           python -c "from pathlib import Path; root=Path('dist');
           assert not any(item.name == 'node_modules' for item in root.rglob('node_modules'))"
 
+      - name: Smoke-test packaged app on Windows
+        if: matrix.platform == 'windows'
+        run: dist/AlphaEngine.exe --smoke-test
+
+      - name: Smoke-test packaged app on macOS
+        if: matrix.platform == 'macos'
+        run: dist/AlphaEngine.app/Contents/MacOS/AlphaEngine --smoke-test
+
+      - name: Smoke-test packaged app on Linux
+        if: matrix.platform == 'linux'
+        run: dist/AlphaEngine/AlphaEngine --smoke-test
+
       - name: Package Windows executable
         if: matrix.platform == 'windows'
         run: |

@@ -8,3 +8,7 @@ Pushing a `v*` tag builds a Windows executable, a macOS disk image, and Linux Ap
 The local database is stored in the user's application-data directory: `%LOCALAPPDATA%\AlphaEngine` on Windows, `~/Library/Application Support/AlphaEngine` on macOS, and `$XDG_DATA_HOME/alpha-engine` (or `~/.local/share/alpha-engine`) on Linux. Set `ALPHA_ENGINE_DATA_DIR` to override the directory.
 
 The app's `GET /api/updates` endpoint checks the latest stable GitHub Release and reports whether it is newer than the running app. It does not download or install updates automatically.
+
+`POST /api/diagnostics` creates and returns a support ZIP containing app version, selected app state, and a read-only database snapshot. Sensitive values are redacted; the temporary ZIP is removed after it is sent.
+
+The `BackupRestore` service in `app.services.backup_restore` creates consistent SQLite backups and restores a validated backup atomically to the app database path.

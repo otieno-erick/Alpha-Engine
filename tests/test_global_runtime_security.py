@@ -6,6 +6,8 @@ import psutil
 import pytest
 
 from app import main as app_main
+from app import db
+from app.desktop import _smoke_test
 from app.services.runtime_security import RuntimeSecurity
 from app.services.secret_store import SecretStore
 
@@ -107,6 +109,42 @@ def test_desktop_lifespan_stops_registered_children(monkeypatch):
 
     assert process.terminated is True
     assert app_main.managed_child_processes == {}
+
+
+def test_desktop_smoke_test_starts_and_stops_backend():
+    _smoke_test()
+
+
+@pytest.mark.parametrize(
+    ("system", "environment", "expected"),
+    [
+        ("Windows", {"LOCALAPPDATA": "C:/Users/test/AppData/Local"}, "C:/Users/test/AppData/Local/AlphaEngine"),
+        ("Darwin", {}, "HOME/Library/Application Support/AlphaEngine"),
+        ("Linux", {"XDG_DATA_HOME": "/home/test/.local/share"}, "/home/test/.local/share/alpha-engine"),
+    ],
+)
+def test_database_uses_platform_user_data_directory(
+    monkeypatch, tmp_path, system, environment, expected
+):
+    monkeypatch.setattr(db.platform, "system", lambda: system)
+    monkeypatch.setattr(db.Path, "home", lambda: tmp_path)
+    monkeypatch.delenv("ALPHA_ENGINE_DATA_DIR", raising=False)
+    for key in ("LOCALAPPDATA", "XDG_DATA_HOME"):
+        monkeypatch.delenv(key, raising=False)
+    for key, value in environment.items():
+        monkeypatch.setenv(key, value)
+
+    path = db.user_data_directory()
+    expected_path = Path(expected.replace("HOME", str(tmp_path)))
+
+    assert path == expected_path
+
+
+def test_database_supports_an_explicit_data_directory(monkeypatch, tmp_path):
+    configured = tmp_path / "custom-data"
+    monkeypatch.setenv("ALPHA_ENGINE_DATA_DIR", str(configured))
+
+    assert db.user_data_directory() == configured
 
 
 def test_secret_store_uses_keychain_not_plaintext(monkeypatch):

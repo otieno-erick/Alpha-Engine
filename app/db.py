@@ -1,10 +1,29 @@
+import os
+import platform
 from pathlib import Path
 import sqlite3
 
-DB_PATH = Path(__file__).resolve().parent.parent / "alpha_engine.db"
+
+def user_data_directory() -> Path:
+    override = os.environ.get("ALPHA_ENGINE_DATA_DIR")
+    if override:
+        return Path(override)
+
+    system = platform.system()
+    if system == "Windows":
+        local_app_data = os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local"
+        return Path(local_app_data) / "AlphaEngine"
+    if system == "Darwin":
+        return Path.home() / "Library" / "Application Support" / "AlphaEngine"
+    data_home = os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share"
+    return Path(data_home) / "alpha-engine"
+
+
+DB_PATH = user_data_directory() / "alpha_engine.db"
 
 
 def get_connection() -> sqlite3.Connection:
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
