@@ -1,15 +1,10 @@
-import os
-import sys
-
-if sys.stdout is None:
-    sys.stdout = open(os.devnull, "w")
-if sys.stderr is None:
-    sys.stderr = open(os.devnull, "w")
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import socket
+import sys
 import threading
 import time
 from urllib.error import URLError
@@ -18,6 +13,13 @@ from urllib.request import urlopen
 import uvicorn
 
 from app.main import app
+
+# A windowed Windows app has no console, so stdout/stderr can be None.
+# Give them a harmless target so logging does not crash.
+if sys.stdout is None:
+    sys.stdout = open(os.devnull, "w")
+if sys.stderr is None:
+    sys.stderr = open(os.devnull, "w")
 
 
 def _available_port() -> int:
@@ -29,7 +31,13 @@ def _available_port() -> int:
 def _start_backend() -> tuple[uvicorn.Server, threading.Thread, int]:
     port = _available_port()
     server = uvicorn.Server(
-        uvicorn.Config(app, host="127.0.0.1", port=port, log_level="warning")
+        uvicorn.Config(
+            app,
+            host="127.0.0.1",
+            port=port,
+            log_level="warning",
+            log_config=None,
+        )
     )
     backend = threading.Thread(target=server.run, name="alpha-engine-backend")
     backend.start()
