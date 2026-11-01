@@ -28,3 +28,12 @@ def test_alpha_detail_exposes_core_fields():
     assert detail.payload()["id"] == "A-102"
     assert detail.payload()["dataset"] == "USA_EQ"
     assert detail.payload()["checks"][0]["id"] == "sub_universe"
+
+
+def test_alpha_id_renders_as_detail_link():
+    alpha = {"id": "A-105", "dataset": "USA_EQ", "checks": [{"passed": True}]}
+    detail = AlphaDetail.from_alpha(alpha)
+    html = detail.detail_link()
+    assert "A-105" in html
+    assert '/api/alphas/A-105' in html
+    assert 'hx-target="#alpha-detail"' in html

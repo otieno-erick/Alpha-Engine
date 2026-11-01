@@ -3,11 +3,13 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
+from app.db import get_cached_alphas, init_db
 from app.services.audit import AuditLog
 from app.services.hash_cache import HashCache
 from app.services.quota import QuotaGuard
 from app.services.rules import load_rules
 from app.services.scheduler import Scheduler
+from app.services.submission import AlphaDetail
 
 app = FastAPI(title="Alpha Engine")
 
@@ -19,6 +21,8 @@ quota_guard = QuotaGuard(rules)
 hash_cache = HashCache()
 scheduler = Scheduler(rules)
 audit = AuditLog()
+
+init_db()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -40,6 +44,20 @@ def get_rules():
 @app.get("/api/quota")
 def get_quota():
     return {"remaining": quota_guard.remaining(), "reserve": quota_guard.reserve, "used_today": 0}
+
+
+@app.get("/api/alphas")
+def list_cached_alphas():
+    return get_cached_alphas()
+
+
+@app.get("/api/alphas/{alpha_id}")
+def get_alpha_detail(alpha_id: str):
+    cached = get_cached_alphas()
+    for candidate in cached:
+        if candidate.get("alpha_id") == alpha_id:
+            return AlphaDetail.from_alpha(candidate).payload()
+    raise HTTPException(status_code=404, detail="Alpha not found")
 
 
 @app.post("/api/simulations/validate")
@@ -75,4 +93,3 @@ def list_tasks():
 @app.get("/api/audit")
 def list_audit():
     return audit.list_entries()
-

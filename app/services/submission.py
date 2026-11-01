@@ -49,6 +49,14 @@ class AlphaDetail:
     def from_alpha(cls, alpha: dict[str, Any]) -> "AlphaDetail":
         return cls(alpha)
 
+    def detail_link(self) -> str:
+        alpha_id = self.alpha.get("id") or "alpha"
+        return (
+            f'<a href="/api/alphas/{alpha_id}" '
+            'hx-get="/api/alphas/{alpha_id}" hx-target="#alpha-detail" hx-swap="innerHTML">'
+            f"{alpha_id}</a>"
+        ).replace("{alpha_id}", alpha_id)
+
     def payload(self) -> dict[str, Any]:
         return {
             "id": self.alpha.get("id"),
