@@ -10,9 +10,9 @@ _NODE_PROCESS_NAMES = {"node", "nodejs", "node.exe", "nodejs.exe"}
 class RuntimeSecurity:
     """Global-runtime checks for the app shell.
 
-    The runtime guard rejects both a local Node installation footprint and an
-    active Node process so the app stays within the Phase 1 security and
-    packaging requirements.
+    These guards reject both a local Node installation footprint and any active
+    Node.js process so the app stays compliant with the Phase 1 global runtime
+    requirements without introducing a build-time Node toolchain.
     """
 
     @staticmethod
