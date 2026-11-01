@@ -19,6 +19,8 @@ def test_release_workflow_builds_required_artifacts():
     assert "dist/AlphaEngine.exe --smoke-test" in content
     assert "dist/AlphaEngine.app/Contents/MacOS/AlphaEngine --smoke-test" in content
     assert "dist/AlphaEngine/AlphaEngine --smoke-test" in content
+    assert "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh" in content
+    assert "linuxdeploy-plugin-gtk/releases/download/continuous" not in content
     assert "softprops/action-gh-release" in content
 
 
