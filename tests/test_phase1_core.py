@@ -50,6 +50,13 @@ def list_cached_alphas():
     return get_cached_alphas()
 
 
+@app.post("/api/tasks/stop-all")
+def stop_all_tasks():
+    tasks = scheduler.stop_all(within_seconds=10)
+    audit.log("stop_all", {"count": len(tasks), "stopped": [task.get("name") for task in tasks]})
+    return {"stopped": True, "tasks": tasks}
+
+
 @app.post("/api/simulations/validate")
 def validate_simulation(payload: dict):
     config = payload.get("config", {})

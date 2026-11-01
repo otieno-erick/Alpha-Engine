@@ -49,6 +49,13 @@ class Scheduler:
         self.tasks.append(task)
         return task
 
+    def stop_all(self, *, within_seconds: int = 10) -> list[dict[str, Any]]:
+        for task in self.tasks:
+            if task.get("status") == "running":
+                task["status"] = "stopped"
+                task["stopped_within_seconds"] = within_seconds
+        return self.tasks
+
     def list_tasks(self) -> list[dict[str, Any]]:
         return self.tasks
 
