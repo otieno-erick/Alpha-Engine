@@ -3,6 +3,115 @@ from __future__ import annotations
 from typing import Any
 
 
+DEFAULT_PROVIDER_SPECS: list[dict[str, Any]] = [
+    {
+        "name": "google_ai_studio",
+        "label": "Google AI Studio",
+        "key_url": "https://aistudio.google.com/app/apikey",
+        "key_required": True,
+    },
+    {
+        "name": "groq",
+        "label": "Groq",
+        "key_url": "https://console.groq.com/keys",
+        "key_required": True,
+    },
+    {
+        "name": "cerebras",
+        "label": "Cerebras",
+        "key_url": "https://cloud.cerebras.ai/",
+        "key_required": True,
+    },
+    {
+        "name": "openrouter",
+        "label": "OpenRouter",
+        "key_url": "https://openrouter.ai/keys",
+        "key_required": True,
+    },
+    {
+        "name": "nvidia_nim",
+        "label": "NVIDIA NIM",
+        "key_url": "https://build.nvidia.com/explore/discover",
+        "key_required": True,
+    },
+    {
+        "name": "mistral",
+        "label": "Mistral",
+        "key_url": "https://console.mistral.ai/api-keys/",
+        "key_required": True,
+    },
+    {
+        "name": "github_models",
+        "label": "GitHub Models",
+        "key_url": "https://github.com/settings/tokens",
+        "key_required": True,
+    },
+    {
+        "name": "huggingface_free",
+        "label": "Hugging Face (free)",
+        "key_url": "https://huggingface.co/settings/tokens",
+        "key_required": True,
+    },
+    {
+        "name": "openai",
+        "label": "OpenAI",
+        "key_url": "https://platform.openai.com/api-keys",
+        "key_required": True,
+    },
+    {
+        "name": "anthropic_claude",
+        "label": "Anthropic Claude",
+        "key_url": "https://console.anthropic.com/settings/keys",
+        "key_required": True,
+    },
+]
+
+
+class ProviderCatalog:
+    """Catalog for the LLM providers shown in the Providers tab."""
+
+    def __init__(self, providers: dict[str, dict[str, Any]] | None = None):
+        self.providers: dict[str, dict[str, Any]] = {}
+        if providers:
+            for name, config in providers.items():
+                self.register(name, **config)
+        else:
+            for spec in DEFAULT_PROVIDER_SPECS:
+                self.register(
+                    spec["name"],
+                    label=spec.get("label", spec["name"]),
+                    key_url=spec.get("key_url"),
+                    key_required=spec.get("key_required", True),
+                )
+
+    def register(
+        self,
+        name: str,
+        *,
+        label: str | None = None,
+        key_url: str | None = None,
+        key_required: bool = True,
+        **meta: Any,
+    ) -> None:
+        self.providers[name] = {
+            "name": name,
+            "label": label or name,
+            "key_url": key_url,
+            "key_required": key_required,
+            **meta,
+        }
+
+    def list_cards(self) -> list[dict[str, Any]]:
+        return [dict(provider) for provider in self.providers.values()]
+
+    def by_name(self, name: str) -> dict[str, Any] | None:
+        return self.providers.get(name)
+
+
+def default_provider_catalog() -> ProviderCatalog:
+    return ProviderCatalog()
+
+
 class LLMRouter:
     """Simple provider router for the Alpha Engine LLM layer.
 
