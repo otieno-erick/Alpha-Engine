@@ -96,8 +96,13 @@ jobs:
         if: matrix.platform == 'linux'
         run: |
           version="${GITHUB_REF_NAME#v}"
+          if [[ ! "$version" =~ ^[0-9] ]]; then
+            version="0.1.0"
+          fi
+
           mkdir -p artifacts AppDir/usr/lib/alpha-engine AppDir/usr/share/applications AppDir/DEBIAN
           cp -R dist/AlphaEngine/. AppDir/usr/lib/alpha-engine/
+
           cat > AppDir/usr/share/applications/alpha-engine.desktop <<'EOF'
           [Desktop Entry]
           Name=Alpha Engine
@@ -106,19 +111,22 @@ jobs:
           Type=Application
           Categories=Finance;
           EOF
+
           cat > AppDir/AppRun <<'EOF'
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
           exec "$HERE/usr/lib/alpha-engine/AlphaEngine" "$@"
           EOF
           chmod +x AppDir/AppRun
+
           mkdir -p AppDir/usr/share/icons/hicolor/scalable/apps
           cat > AppDir/usr/share/icons/hicolor/scalable/apps/alpha-engine.svg <<'EOF'
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#172554"/><path d="M12 42 25 14h10l17 36H41l-4-9H24l-3 9H9zm16-8h6l-3-9z" fill="#38bdf8"/></svg>
           EOF
+
           cat > AppDir/DEBIAN/control <<EOF
           Package: alpha-engine
-          Version: ${version:-0.1.0}
+          Version: ${version}
           Section: finance
           Priority: optional
           Architecture: amd64
@@ -126,16 +134,20 @@ jobs:
           Maintainer: Alpha Engine maintainers
           Description: Desktop WorldQuant BRAIN alpha research engine
           EOF
+
           mkdir -p AppDir/usr/bin
           cat > AppDir/usr/bin/alpha-engine <<'EOF'
           #!/bin/sh
           exec /usr/lib/alpha-engine/AlphaEngine "$@"
           EOF
           chmod +x AppDir/usr/bin/alpha-engine
-          dpkg-deb --build AppDir "artifacts/alpha-engine_${version:-0.1.0}_amd64.deb"
+
+          dpkg-deb --build AppDir "artifacts/alpha-engine_${version}_amd64.deb"
+
           curl -fsSL -o linuxdeploy-x86_64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           curl -fsSL -o linuxdeploy-plugin-gtk.sh https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh
           chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-gtk.sh
+
           ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --executable AppDir/usr/lib/alpha-engine/AlphaEngine --desktop-file AppDir/usr/share/applications/alpha-engine.desktop --plugin gtk
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --output appimage
           appimage="$(find . -maxdepth 1 -type f -name '*.AppImage' ! -name 'linuxdeploy-x86_64.AppImage' -print -quit)"
