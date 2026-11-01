@@ -6,7 +6,7 @@ from pathlib import Path
 from app.db import get_cached_alphas, init_db
 from app.services.audit import AuditLog
 from app.services.hash_cache import HashCache
-from app.services.llm_hub import default_provider_catalog
+from app.services.llm_hub import LLMBudgetLedger, default_provider_catalog
 from app.services.quota import QuotaGuard
 from app.services.rules import load_rules
 from app.services.scheduler import Scheduler
@@ -22,6 +22,7 @@ quota_guard = QuotaGuard(rules)
 hash_cache = HashCache()
 scheduler = Scheduler(rules)
 audit = AuditLog()
+llm_budget = LLMBudgetLedger()
 
 init_db()
 
@@ -64,6 +65,11 @@ def get_alpha_detail(alpha_id: str):
 @app.get("/api/llm/providers")
 def get_llm_providers():
     return default_provider_catalog().list_cards()
+
+
+@app.get("/api/llm/budget")
+def get_llm_budget():
+    return llm_budget.summary()
 
 
 @app.post("/api/simulations/validate")
