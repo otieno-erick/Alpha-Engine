@@ -42,6 +42,12 @@
 | M-03 | app/services/pipeline.py | test_creation_loop_generates_expressions_and_runs_pipeline | passing | 2026-11-01 |
 | M-04 | app/services/pipeline.py | test_creation_loop_generates_expressions_and_runs_pipeline | passing | 2026-11-01 |
 | M-05 | app/services/pipeline.py | test_creation_loop_generates_expressions_and_runs_pipeline | passing | 2026-11-01 |
+| M-06 | app/services/pipeline.py | test_creation_loop_repair_prompts_and_lineage_are_recorded | passing | 2026-11-01 |
+| M-07 | app/services/pipeline.py | test_creation_loop_generates_expressions_and_runs_pipeline | passing | 2026-11-01 |
+| M-08 | app/services/pipeline.py | test_field_profiler_and_overfitting_guard_are_available | passing | 2026-11-01 |
+| M-09 | app/services/pipeline.py | test_creation_loop_selects_datasets_and_generates_hypotheses | passing | 2026-11-01 |
+| M-10 | app/services/pipeline.py | test_creation_loop_repair_prompts_and_lineage_are_recorded | passing | 2026-11-01 |
+| M-11 | app/services/pipeline.py | test_field_profiler_and_overfitting_guard_are_available | passing | 2026-11-01 |
 | J-02 | app/services/submission.py | test_submission_rejects_failed_alpha | passing | 2026-10-22 |
 | AP-01 | app/services/submission.py | test_alpha_detail_exposes_core_fields | passing | 2026-10-22 |
 | E-01 | app/services/evolution.py | test_seed_selection_and_mutation_generation | passing | 2026-10-22 |
