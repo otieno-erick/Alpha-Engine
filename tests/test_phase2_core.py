@@ -55,3 +55,22 @@ def test_diagnoser_returns_first_failure_and_repair_instruction():
     assert diagnosis["first_failure"] == "is_ladder"
     assert diagnosis["repair_instruction"] == "IS Ladder"
     assert diagnosis["repair_type"] == "repair"
+
+
+def test_diagnoser_maps_correlation_and_weight_failures_to_repair_instructions():
+    checks = [
+        {"id": "max_weight", "passed": False},
+        {"id": "turnover", "passed": True},
+        {"id": "is_ladder", "passed": True},
+        {"id": "sharpe", "passed": True},
+        {"id": "correlation", "passed": False},
+    ]
+    diagnosis = Diagnoser().diagnose(checks)
+    assert diagnosis["first_failure"] == "max_weight"
+    assert diagnosis["repair_instruction"] == "weight/coverage"
+    assert diagnosis["repair_type"] == "repair"
+
+    correlation = Diagnoser().diagnose([{"id": "correlation", "passed": False}])
+    assert correlation["first_failure"] == "correlation"
+    assert correlation["repair_instruction"] == "correlation structural change"
+    assert correlation["repair_type"] == "structural_change"

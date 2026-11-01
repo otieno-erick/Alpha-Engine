@@ -27,10 +27,10 @@
 | V-01 | app/services/validator.py | test_validator_rejects_vector_field_without_vec_operator | passing | 2026-10-22 |
 | V-03 | app/services/validator.py | test_validator_rejects_off_grid_window | passing | 2026-10-22 |
 | C-01 | app/services/scorer.py | test_scorer_reports_margin_for_sub_universe_example | passing | 2026-10-22 |
-| C-02 | app/services/scorer.py | pending | todo | |
+| C-02 | app/services/scorer.py | test_scorer_reports_margin_for_sub_universe_example | passing | 2026-11-01 |
 | C-04 | app/services/scorer.py | test_scorer_applies_is_ladder_discount_for_low_turnover | passing | 2026-10-22 |
 | D-01 | app/services/diagnoser.py | test_diagnoser_returns_first_failure_and_repair_instruction | passing | 2026-10-22 |
-| D-02 | app/services/diagnoser.py | pending | todo | |
+| D-02 | app/services/diagnoser.py | test_diagnoser_maps_correlation_and_weight_failures_to_repair_instructions | passing | 2026-11-01 |
 | L-05 | app/services/llm_hub.py | test_router_uses_fallback_when_primary_is_exhausted | passing | 2026-10-22 |
 | L-01 | app/templates/ | pending | todo | |
 | M-05 | app/services/pipeline.py | test_pipeline_order_for_clean_alpha | passing | 2026-10-22 |
