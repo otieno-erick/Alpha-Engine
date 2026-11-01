@@ -7,6 +7,15 @@ name = "alpha-engine"
 version = "0.1.0"
 description = "Alpha Engine desktop app skeleton for WorldQuant BRAIN alpha research"
 requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "jinja2",
+    "pyyaml",
+    "keyring",
+    "psutil",
+    "pywebview",
+]
 
 [tool.setuptools]
 packages = ["app", "app.services"]

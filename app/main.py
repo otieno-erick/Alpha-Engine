@@ -1,7 +1,9 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
+from typing import Any
 
 from app.db import get_cached_alphas, init_db
 from app.services.audit import AuditLog
@@ -9,10 +11,9 @@ from app.services.hash_cache import HashCache
 from app.services.llm_hub import LLMBudgetLedger, default_provider_catalog
 from app.services.quota import QuotaGuard
 from app.services.rules import load_rules
+from app.services.runtime_security import RuntimeSecurity
 from app.services.scheduler import Scheduler
 from app.services.submission import AlphaDetail
-
-app = FastAPI(title="Alpha Engine")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
@@ -23,6 +24,28 @@ hash_cache = HashCache()
 scheduler = Scheduler(rules)
 audit = AuditLog()
 llm_budget = LLMBudgetLedger()
+managed_child_processes: dict[str, Any] = {}
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    try:
+        yield
+    finally:
+        scheduler.stop_all(within_seconds=10)
+        RuntimeSecurity.stop_all(managed_child_processes, timeout=10)
+        managed_child_processes.clear()
+
+
+app = FastAPI(title="Alpha Engine", lifespan=lifespan)
+
+
+def register_child_process(name: str, process: Any) -> None:
+    if not name:
+        raise ValueError("Managed child processes require a name")
+    if name in managed_child_processes:
+        raise ValueError(f"A managed child process named {name!r} is already registered")
+    managed_child_processes[name] = process
 
 init_db()
 
