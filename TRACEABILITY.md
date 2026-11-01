@@ -1,5 +1,8 @@
 | Requirement ID | Module / file(s) | Test name | Status (todo / in progress / passing) | Last updated |
 |---|---|---|---|---|
+| G-01 | app/services/runtime_security.py | test_global_runtime_has_no_node_modules | passing | 2026-11-01 |
+| G-02 | app/services/runtime_security.py | test_global_runtime_stops_all_processes | passing | 2026-11-01 |
+| G-05 | app/services/secret_store.py | test_secret_store_uses_keychain_not_plaintext | passing | 2026-11-01 |
 | G-03 | app/services/rules.py, rules/phase1_baseline.yaml | test_rules_loader_loads_yaml | passing | 2026-10-22 |
 | G-04 | app/services/submission.py | test_submission_requires_explicit_confirmation | passing | 2026-10-22 |
 | G-06 | app/services/hash_cache.py | test_hash_cache_detects_duplicate_config | passing | 2026-10-22 |
@@ -37,9 +40,6 @@
 | F-04 | app/services/phase6.py | test_audit_viewer_filters_and_summarizes_events | passing | 2026-11-01 |
 | K-01 | pyproject.toml | passing | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
-| G-01 | package config | pending | todo | |
-| G-02 | app/main.py | pending | todo | |
-| G-05 | app/services/secret_store.py | pending | todo | |
 | G-08 | app/templates/index.html | pending | todo | |
 | G-09 | app/services/scheduler.py | pending | todo | |
 | C-02 | app/services/scorer.py | pending | todo | |
