@@ -142,7 +142,7 @@ jobs:
           EOF
           chmod +x AppDir/usr/bin/alpha-engine
 
-          dpkg-deb --build AppDir "artifacts/alpha-engine_${version}_amd64.deb"
+          dpkg-deb --build AppDir "artifacts/alpha-engine_${version:-0.1.0}_amd64.deb"
 
           curl -fsSL -o linuxdeploy-x86_64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           curl -fsSL -o linuxdeploy-plugin-gtk.sh https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh
