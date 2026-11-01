@@ -9,7 +9,7 @@
     <title>Alpha Engine</title>
   </head>
   <body class="bg-slate-100 text-slate-900">
-    <main class="mx-auto max-w-5xl py-12 px-4" x-data="{
+    <main class="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8 lg:py-12 2xl:max-w-screen-2xl" x-data="{
       quota: {remaining: 100, reserve: 10},
       cache: {saved: 0},
       tasks: [],
@@ -17,38 +17,38 @@
       sim_today: 42,
       reset: {hours: 6, minutes: 12}
     }">
-      <header class="mb-8 flex items-center justify-between gap-4">
+      <header class="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div>
           <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Phase 1</p>
-          <h1 class="text-3xl font-bold">Alpha Engine</h1>
+          <h1 class="text-2xl font-bold sm:text-3xl">Alpha Engine</h1>
         </div>
-        <div class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm">
+        <div class="self-start rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm sm:self-auto">
           <span class="font-semibold">Quota reserve:</span>
           <span x-text="quota.reserve || 10">10</span>
         </div>
       </header>
 
-      <section class="mb-8 grid gap-4 md:grid-cols-3">
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section class="mb-6 grid grid-cols-1 gap-4 sm:mb-8 sm:grid-cols-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <p class="text-sm text-slate-500">Session time left</p>
-          <p class="mt-2 text-3xl font-bold" x-text="session.minutes_left + ' min'">54 min</p>
+          <p class="mt-2 text-2xl font-bold sm:text-3xl" x-text="session.minutes_left + ' min'">54 min</p>
         </div>
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <p class="text-sm text-slate-500">Simulations left today</p>
-          <p class="mt-2 text-3xl font-bold" x-text="sim_today">42</p>
+          <p class="mt-2 text-2xl font-bold sm:text-3xl" x-text="sim_today">42</p>
         </div>
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <p class="text-sm text-slate-500">Quota reset in</p>
-          <p class="mt-2 text-3xl font-bold" x-text="reset.hours + 'h ' + reset.minutes + 'm'">6h 12m</p>
+          <p class="mt-2 text-2xl font-bold sm:text-3xl" x-text="reset.hours + 'h ' + reset.minutes + 'm'">6h 12m</p>
         </div>
       </section>
 
-      <section class="mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section class="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:mb-8 sm:p-5">
         <div class="mb-4 flex items-center justify-between gap-2">
           <h2 class="text-lg font-semibold">LLM Providers</h2>
           <span class="text-xs uppercase tracking-[0.2em] text-slate-500">Providers</span>
         </div>
-        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
             <div class="font-semibold">Google AI Studio</div>
             <button class="mt-3 rounded-md bg-slate-900 px-3 py-1.5 text-sm text-white">Add key</button>
@@ -92,30 +92,30 @@
         </div>
       </section>
 
-      <section class="grid gap-4 md:grid-cols-3">
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <p class="text-sm text-slate-500">Remaining quota</p>
-          <p class="mt-2 text-3xl font-bold" x-text="quota.remaining || 100">100</p>
+          <p class="mt-2 text-2xl font-bold sm:text-3xl" x-text="quota.remaining || 100">100</p>
         </div>
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <p class="text-sm text-slate-500">Saved by hash cache</p>
-          <p class="mt-2 text-3xl font-bold" x-text="cache.saved || 0">0</p>
+          <p class="mt-2 text-2xl font-bold sm:text-3xl" x-text="cache.saved || 0">0</p>
         </div>
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <p class="text-sm text-slate-500">Running tasks</p>
-          <p class="mt-2 text-3xl font-bold" x-text="tasks.length || 0">0</p>
+          <p class="mt-2 text-2xl font-bold sm:text-3xl" x-text="tasks.length || 0">0</p>
         </div>
       </section>
 
-      <section class="mt-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm" x-data="{
+      <section class="mt-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:mt-8 sm:p-5" x-data="{
         quota: {remaining: 100, reserve: 10},
         cache: {saved: 0},
         tasks: []
       }">
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <h2 class="text-lg font-semibold">Runtime status</h2>
           <button
-            class="rounded-md bg-slate-900 px-4 py-2 text-white"
+            class="w-full rounded-md bg-slate-900 px-4 py-2 text-white sm:w-auto"
             hx-post="/api/tasks"
             hx-vals='{"name":"phase1-task","source":"LLM","slots":2}'
             hx-target="#task-output"
@@ -124,7 +124,7 @@
             Start task
           </button>
         </div>
-        <pre id="task-output" class="mt-4 whitespace-pre-wrap text-sm text-slate-700">Waiting for task status...</pre>
+        <pre id="task-output" class="mt-4 whitespace-pre-wrap break-words text-sm text-slate-700">Waiting for task status...</pre>
       </section>
     </main>
   </body>
