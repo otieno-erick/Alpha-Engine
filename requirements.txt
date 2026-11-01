@@ -4,4 +4,4 @@ uvicorn
 jinja2
 pyyaml
 keyring
-
+psutil
