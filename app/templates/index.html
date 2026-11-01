@@ -9,7 +9,14 @@
     <title>Alpha Engine</title>
   </head>
   <body class="bg-slate-100 text-slate-900">
-    <main class="mx-auto max-w-5xl py-12 px-4">
+    <main class="mx-auto max-w-5xl py-12 px-4" x-data="{
+      quota: {remaining: 100, reserve: 10},
+      cache: {saved: 0},
+      tasks: [],
+      session: {minutes_left: 54},
+      sim_today: 42,
+      reset: {hours: 6, minutes: 12}
+    }">
       <header class="mb-8 flex items-center justify-between gap-4">
         <div>
           <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Phase 1</p>
@@ -20,6 +27,21 @@
           <span x-text="quota.reserve || 10">10</span>
         </div>
       </header>
+
+      <section class="mb-8 grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-sm text-slate-500">Session time left</p>
+          <p class="mt-2 text-3xl font-bold" x-text="session.minutes_left + ' min'">54 min</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-sm text-slate-500">Simulations left today</p>
+          <p class="mt-2 text-3xl font-bold" x-text="sim_today">42</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-sm text-slate-500">Quota reset in</p>
+          <p class="mt-2 text-3xl font-bold" x-text="reset.hours + 'h ' + reset.minutes + 'm'">6h 12m</p>
+        </div>
+      </section>
 
       <section class="grid gap-4 md:grid-cols-3">
         <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -58,4 +80,3 @@
     </main>
   </body>
 </html>
-

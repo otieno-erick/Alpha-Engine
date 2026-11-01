@@ -11,6 +11,7 @@
 | A-04 | app/services/quota.py | test_quota_reads_x_ratelimit_remaining | passing | 2026-10-22 |
 | A-05 | app/services/batch.py | test_batch_splitter_keeps_like_configurations_together | passing | 2026-10-22 |
 | A-06 | app/services/client.py | test_client_normalizes_region_agnostic_payload | passing | 2026-11-01 |
+| A-07 | app/templates/index.html | UI header displays session/quota values | passing | 2026-11-01 |
 | H-01 | app/services/hash_cache.py | test_hash_changes_when_any_setting_changes | passing | 2026-10-22 |
 | H-02 | app/services/hash_cache.py | test_duplicate_config_returns_cached_result | passing | 2026-10-22 |
 | T-01 | app/services/scheduler.py | test_scheduler_uses_shared_slot_limit | passing | 2026-10-22 |
@@ -36,7 +37,6 @@
 | F-04 | app/services/phase6.py | test_audit_viewer_filters_and_summarizes_events | passing | 2026-11-01 |
 | K-01 | pyproject.toml | passing | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
-| A-07 | app/templates/index.html | pending | todo | |
 | G-01 | package config | pending | todo | |
 | G-02 | app/main.py | pending | todo | |
 | G-05 | app/services/secret_store.py | pending | todo | |
