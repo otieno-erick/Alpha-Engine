@@ -12,6 +12,19 @@ class BrainClient:
             return payload
         return {"schema": [], "records": []}
 
+    def normalize_region_config(self, config: dict[str, Any]) -> dict[str, Any]:
+        if not isinstance(config, dict):
+            return config
+
+        normalized = dict(config)
+        if normalized.get("region") == "ALL":
+            normalized["type"] = "REGION_AGNOSTIC"
+            normalized["lookback"] = 0
+        return normalized
+
+    def build_request_payload(self, config: dict[str, Any]) -> dict[str, Any]:
+        return self.normalize_region_config(config)
+
     def ensure_batch_constraints(self, configs: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
         if not configs:
             return []

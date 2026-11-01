@@ -21,6 +21,14 @@ def test_client_parses_recordset_payload():
     assert client.parse_recordset(payload) == payload
 
 
+def test_client_normalizes_region_agnostic_payload():
+    client = BrainClient()
+    payload = client.build_request_payload({"region": "ALL", "type": "REGION", "lookback": 21})
+    assert payload["region"] == "ALL"
+    assert payload["type"] == "REGION_AGNOSTIC"
+    assert payload["lookback"] == 0
+
+
 def test_batch_splitter_keeps_like_configurations_together():
     items = [
         {"region": "USA", "delay": 1, "language": "en", "instrumentType": "equity"},

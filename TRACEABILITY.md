@@ -6,9 +6,11 @@
 | G-07 | app/services/quota.py | test_quota_guard_blocks_zero_remaining | passing | 2026-10-22 |
 | G-10 | app/services/audit.py | test_audit_log_records_user_actions | passing | 2026-10-22 |
 | A-01 | app/services/auth.py | test_persona_fallback_is_detected | passing | 2026-10-22 |
+| A-02 | app/services/auth.py | test_persona_fallback_is_detected | passing | 2026-11-01 |
 | A-03 | app/services/client.py | test_client_parses_recordset_payload | passing | 2026-10-22 |
 | A-04 | app/services/quota.py | test_quota_reads_x_ratelimit_remaining | passing | 2026-10-22 |
 | A-05 | app/services/batch.py | test_batch_splitter_keeps_like_configurations_together | passing | 2026-10-22 |
+| A-06 | app/services/client.py | test_client_normalizes_region_agnostic_payload | passing | 2026-11-01 |
 | H-01 | app/services/hash_cache.py | test_hash_changes_when_any_setting_changes | passing | 2026-10-22 |
 | H-02 | app/services/hash_cache.py | test_duplicate_config_returns_cached_result | passing | 2026-10-22 |
 | T-01 | app/services/scheduler.py | test_scheduler_uses_shared_slot_limit | passing | 2026-10-22 |
@@ -30,12 +32,10 @@
 | P-01 | app/services/template_lab.py | test_template_lab_expands_and_counts_preview | passing | 2026-10-22 |
 | B-01 | app/services/correlation_breaker.py | test_correlation_breaker_generates_structured_variants | passing | 2026-10-22 |
 | X-01 | app/services/sampler.py | test_sampler_builds_setting_grid_for_defaults | passing | 2026-10-22 |
-| MB-01 | app/services/phase6.py | test_mobile_page_requires_token_when_enabled | in progress | 2026-10-22 |
-| F-04 | app/services/phase6.py | test_audit_viewer_filters_and_summarizes_events | in progress | 2026-10-22 |
+| MB-01 | app/services/phase6.py | test_mobile_page_requires_token_when_enabled | passing | 2026-11-01 |
+| F-04 | app/services/phase6.py | test_audit_viewer_filters_and_summarizes_events | passing | 2026-11-01 |
 | K-01 | pyproject.toml | passing | 2026-10-22 |
 | S-04 | app/main.py | pending | todo | |
-| A-02 | app/services/auth.py | pending | todo | |
-| A-06 | app/services/client.py | pending | todo | |
 | A-07 | app/templates/index.html | pending | todo | |
 | G-01 | package config | pending | todo | |
 | G-02 | app/main.py | pending | todo | |
