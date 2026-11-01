@@ -1,7 +1,7 @@
 1| | Requirement ID | Module / file(s) | Test name | Status (todo / in progress / passing) | Last updated |
 2| |---|---|---|---|---|
-3| | G-01 | app/services/runtime_security.py | test_global_runtime_has_no_node_modules, test_global_runtime_ignores_unrelated_node_processes, test_global_runtime_detects_node_child_process | in progress | 2026-11-01 |
-4| | G-02 | app/desktop.py, app/main.py, app/services/runtime_security.py | test_desktop_lifespan_stops_registered_children | in progress | 2026-11-01 |
+3| | G-01 | app/services/runtime_security.py | test_global_runtime_has_no_node_modules, test_global_runtime_ignores_unrelated_node_processes, test_global_runtime_detects_node_child_process | passing | 2026-11-01 |
+4| | G-02 | app/desktop.py, app/main.py, app/services/runtime_security.py | test_desktop_lifespan_stops_registered_children, test_global_runtime_terminates_managed_processes, test_global_runtime_kills_processes_that_do_not_terminate | in progress | 2026-11-01 |
 5| | G-03 | app/services/rules.py, rules/phase1_baseline.yaml | test_rules_loader_loads_yaml | todo | 2026-11-01 |
 6| | G-04 | app/services/submission.py | test_submission_requires_explicit_confirmation | passing | 2026-10-22 |
 7| | G-05 | app/services/secret_store.py | test_secret_store_uses_keychain_not_plaintext | passing | 2026-11-01 |
@@ -114,11 +114,11 @@
 114| | F-02 | app/services/phase6.py | test_scheduled_overnight_runs_create_morning_summary | todo | 2026-11-01 |
 115| | F-03 | app/services/phase6.py | test_dry_run_mode_uses_cached_data_without_quota_spend | todo | 2026-11-01 |
 116| | F-04 | app/services/phase6.py | test_audit_viewer_filters_and_summarizes_events | passing | 2026-11-01 |
-117| | K-01 | .github/workflows/release.yml, app/desktop.py | test_release_workflow_builds_required_artifacts | in progress | 2026-11-01 |
-118| | K-02 | .github/workflows/release.yml, pyproject.toml | test_installer_runs_without_manual_setup_on_clean_vm | todo | 2026-11-01 |
-119| | K-03 | .github/workflows/release.yml, app/desktop.py, app/services/runtime_security.py | test_desktop_lifespan_stops_registered_children | in progress | 2026-11-01 |
+117| | K-01 | .github/workflows/release.yml, app/desktop.py | test_release_workflow_builds_required_artifacts | passing | 2026-11-01 |
+118| | K-02 | .github/workflows/release.yml, app/desktop.py, app/db.py | test_release_workflow_builds_required_artifacts, test_desktop_smoke_test_starts_and_stops_backend, test_database_uses_platform_user_data_directory, test_database_supports_an_explicit_data_directory | in progress | 2026-11-01 |
+119| | K-03 | .github/workflows/release.yml, app/desktop.py, app/services/runtime_security.py | test_desktop_lifespan_stops_registered_children, test_global_runtime_terminates_managed_processes, test_global_runtime_kills_processes_that_do_not_terminate | in progress | 2026-11-01 |
 120| | K-04 | app/services/auto_update.py | test_auto_update_checks_github_releases | todo | 2026-11-01 |
-121| | K-05 | README.md | test_readme_documents_unsigned_build_warning | todo | 2026-11-01 |
+121| | K-05 | README.md, tests/test_release_workflow.py | test_readme_documents_unsigned_build_warning | in progress | 2026-11-01 |
 122| | K-06 | app/services/diagnostics.py | test_diagnostics_bundle_removes_secrets | todo | 2026-11-01 |
 123| | K-07 | app/services/backup_restore.py | test_backup_restore_reproduces_local_data_state | todo | 2026-11-01 |
 124| 
