@@ -7,6 +7,7 @@ from typing import Any
 
 from app.db import get_cached_alphas, init_db
 from app.services.audit import AuditLog
+from app.services.auto_update import ReleaseUpdateChecker
 from app.services.hash_cache import HashCache
 from app.services.llm_hub import LLMBudgetLedger, default_provider_catalog
 from app.services.quota import QuotaGuard
@@ -14,6 +15,7 @@ from app.services.rules import load_rules
 from app.services.runtime_security import RuntimeSecurity
 from app.services.scheduler import Scheduler
 from app.services.submission import AlphaDetail
+from app import __version__
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
@@ -24,6 +26,7 @@ hash_cache = HashCache()
 scheduler = Scheduler(rules)
 audit = AuditLog()
 llm_budget = LLMBudgetLedger()
+update_checker = ReleaseUpdateChecker(__version__)
 managed_child_processes: dict[str, Any] = {}
 
 
@@ -59,6 +62,14 @@ def home():
 @app.get("/health")
 def health():
     return {"status": "ok", "app": "alpha-engine"}
+
+
+@app.get("/api/updates")
+def check_for_updates():
+    try:
+        return update_checker.check()
+    except (OSError, TimeoutError, ValueError) as exc:
+        raise HTTPException(status_code=502, detail=f"Could not check GitHub Releases: {exc}") from exc
 
 
 @app.get("/api/rules")

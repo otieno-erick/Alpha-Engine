@@ -117,7 +117,7 @@
 117| | K-01 | .github/workflows/release.yml, app/desktop.py | test_release_workflow_builds_required_artifacts | passing | 2026-11-01 |
 118| | K-02 | .github/workflows/release.yml, app/desktop.py, app/db.py | test_release_workflow_builds_required_artifacts, test_desktop_smoke_test_starts_and_stops_backend, test_database_uses_platform_user_data_directory, test_database_supports_an_explicit_data_directory | in progress | 2026-11-01 |
 119| | K-03 | .github/workflows/release.yml, app/desktop.py, app/services/runtime_security.py | test_desktop_lifespan_stops_registered_children, test_global_runtime_terminates_managed_processes, test_global_runtime_kills_processes_that_do_not_terminate | in progress | 2026-11-01 |
-120| | K-04 | app/services/auto_update.py | test_auto_update_checks_github_releases | todo | 2026-11-01 |
+120| | K-04 | app/services/auto_update.py, app/main.py | test_auto_update_checks_github_releases, test_auto_update_does_not_report_current_release_as_an_update, test_auto_update_rejects_malformed_release, test_update_endpoint_reports_release_check_failures | in progress | 2026-11-01 |
 121| | K-05 | README.md, tests/test_release_workflow.py | test_readme_documents_unsigned_build_warning | in progress | 2026-11-01 |
 122| | K-06 | app/services/diagnostics.py | test_diagnostics_bundle_removes_secrets | todo | 2026-11-01 |
 123| | K-07 | app/services/backup_restore.py | test_backup_restore_reproduces_local_data_state | todo | 2026-11-01 |
