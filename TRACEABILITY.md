@@ -31,9 +31,17 @@
 | C-04 | app/services/scorer.py | test_scorer_applies_is_ladder_discount_for_low_turnover | passing | 2026-10-22 |
 | D-01 | app/services/diagnoser.py | test_diagnoser_returns_first_failure_and_repair_instruction | passing | 2026-10-22 |
 | D-02 | app/services/diagnoser.py | test_diagnoser_maps_correlation_and_weight_failures_to_repair_instructions | passing | 2026-11-01 |
-| L-05 | app/services/llm_hub.py | test_router_uses_fallback_when_primary_is_exhausted | passing | 2026-10-22 |
-| L-01 | app/templates/ | pending | todo | |
-| M-05 | app/services/pipeline.py | test_pipeline_order_for_clean_alpha | passing | 2026-10-22 |
+| L-05 | app/services/llm_hub.py | test_router_uses_fallback_when_primary_is_exhausted | passing | 2026-11-01 |
+| L-01 | app/templates/index.html, app/services/llm_hub.py | test_provider_catalog_includes_all_required_cards | passing | 2026-11-01 |
+| L-06 | app/services/llm_hub.py | test_budget_ledger_summarizes_requests_by_provider_model_and_day | passing | 2026-11-01 |
+| L-07 | app/services/llm_hub.py | test_budget_ledger_summarizes_requests_by_provider_model_and_day | passing | 2026-11-01 |
+| L-08 | app/services/llm_hub.py | test_prompt_versioner_tracks_alpha_prompt_versions | passing | 2026-11-01 |
+| L-09 | app/services/llm_hub.py | test_structured_output_parser_rejects_malformed_json | passing | 2026-11-01 |
+| M-01 | app/services/pipeline.py | test_creation_loop_selects_datasets_and_generates_hypotheses | passing | 2026-11-01 |
+| M-02 | app/services/pipeline.py | test_creation_loop_selects_datasets_and_generates_hypotheses | passing | 2026-11-01 |
+| M-03 | app/services/pipeline.py | test_creation_loop_generates_expressions_and_runs_pipeline | passing | 2026-11-01 |
+| M-04 | app/services/pipeline.py | test_creation_loop_generates_expressions_and_runs_pipeline | passing | 2026-11-01 |
+| M-05 | app/services/pipeline.py | test_creation_loop_generates_expressions_and_runs_pipeline | passing | 2026-11-01 |
 | J-02 | app/services/submission.py | test_submission_rejects_failed_alpha | passing | 2026-10-22 |
 | AP-01 | app/services/submission.py | test_alpha_detail_exposes_core_fields | passing | 2026-10-22 |
 | E-01 | app/services/evolution.py | test_seed_selection_and_mutation_generation | passing | 2026-10-22 |
