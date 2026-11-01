@@ -1,18 +1,25 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from contextlib import asynccontextmanager
 from pathlib import Path
+from tempfile import gettempdir
+from uuid import uuid4
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
+from starlette.background import BackgroundTask
+from typing import Any
 
+from app import __version__, db
 from app.db import get_cached_alphas, init_db
 from app.services.audit import AuditLog
+from app.services.auto_update import ReleaseUpdateChecker
+from app.services.diagnostics import DiagnosticsBundle
 from app.services.hash_cache import HashCache
 from app.services.llm_hub import LLMBudgetLedger, default_provider_catalog
 from app.services.quota import QuotaGuard
 from app.services.rules import load_rules
+from app.services.runtime_security import RuntimeSecurity
 from app.services.scheduler import Scheduler
 from app.services.submission import AlphaDetail
-
-app = FastAPI(title="Alpha Engine")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "app" / "templates"))
@@ -23,6 +30,30 @@ hash_cache = HashCache()
 scheduler = Scheduler(rules)
 audit = AuditLog()
 llm_budget = LLMBudgetLedger()
+update_checker = ReleaseUpdateChecker(__version__)
+diagnostics_bundle = DiagnosticsBundle(app_version=__version__, database_path=db.DB_PATH)
+managed_child_processes: dict[str, Any] = {}
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    try:
+        yield
+    finally:
+        scheduler.stop_all(within_seconds=10)
+        RuntimeSecurity.stop_all(managed_child_processes, timeout=10)
+        managed_child_processes.clear()
+
+
+app = FastAPI(title="Alpha Engine", lifespan=lifespan)
+
+
+def register_child_process(name: str, process: Any) -> None:
+    if not name:
+        raise ValueError("Managed child processes require a name")
+    if name in managed_child_processes:
+        raise ValueError(f"A managed child process named {name!r} is already registered")
+    managed_child_processes[name] = process
 
 init_db()
 
@@ -36,6 +67,37 @@ def home():
 @app.get("/health")
 def health():
     return {"status": "ok", "app": "alpha-engine"}
+
+
+@app.get("/api/updates")
+def check_for_updates():
+    try:
+        return update_checker.check()
+    except (OSError, TimeoutError, ValueError) as exc:
+        raise HTTPException(status_code=502, detail=f"Could not check GitHub Releases: {exc}") from exc
+
+
+@app.post("/api/diagnostics")
+def create_diagnostics():
+    destination = Path(gettempdir()) / f"alpha-engine-diagnostics-{uuid4().hex}.zip"
+    diagnostics_bundle.create(
+        destination,
+        diagnostics={
+            "database_present": db.DB_PATH.exists(),
+            "scheduler_tasks": scheduler.list_tasks(),
+            "quota": {
+                "remaining": quota_guard.remaining(),
+                "reserve": quota_guard.reserve,
+            },
+            "rule_ids": sorted(rules),
+        },
+    )
+    return FileResponse(
+        destination,
+        media_type="application/zip",
+        filename="alpha-engine-diagnostics.zip",
+        background=BackgroundTask(destination.unlink, missing_ok=True),
+    )
 
 
 @app.get("/api/rules")
